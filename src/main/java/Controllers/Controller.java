@@ -2,18 +2,22 @@ package Controllers;
 
 import Models.Database;
 import Models.Song;
-import java.io.File;
-import java.util.ArrayList;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javax.swing.JFileChooser;
+
 import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileNameExtensionFilter;
+
+import java.util.ArrayList;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.net.URL;
+
+import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.Player;
 
 public class Controller {
     Database db = new Database();
     
     public Controller() {
+        // Initialize Player
         
     }
     
@@ -43,8 +47,22 @@ public class Controller {
     }
     
     public void playAudio(String cloudinaryURL) {
-        Media media = new Media(cloudinaryURL);
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.play();
+        try {
+            BufferedInputStream in = new BufferedInputStream(new URL(cloudinaryURL).openStream());
+            Player player = new Player(in);
+            
+            // Start the audio playback on a separate thread
+            Thread playerThread = new Thread(() -> {
+                try {
+                    player.play();
+                } catch (JavaLayerException e) {
+                    e.printStackTrace();
+                }
+            });
+            playerThread.start();
+            
+        } catch (IOException | JavaLayerException e) {
+            e.printStackTrace();
+        }
     }
 }
