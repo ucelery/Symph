@@ -5,7 +5,9 @@
 package Utilities;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 /**
@@ -32,6 +34,16 @@ public class PlayerManager {
        if (!musicQueue.isEmpty()) {
            currentSong = musicQueue.poll();
        }
+    }
+    
+    public void shuffle() {
+        List<Song> list = new ArrayList<>(musicQueue);
+        Collections.shuffle(list);
+        
+        musicQueue.clear();
+        musicQueue.addAll(list);
+        
+        System.out.println("[ MUSIC.PLAYER ] Queue is shuffled");
     }
     
     public Queue<Song> getQueue() {
