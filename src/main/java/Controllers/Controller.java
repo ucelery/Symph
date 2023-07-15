@@ -99,16 +99,7 @@ public class Controller {
         playerManager.play();
     }
     
-    public void getSongs() {
-        try {
-            ArrayList<Song> songs = db.getSongsData().get();
-            System.out.println("[ APP ] Fetch Complete!");
-                
-            // Do something when Thread is finished
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-        
-        System.out.println("[ APP ] Fetching Songs...");
+    public ArrayList<Song> getSongs() {
+        return playerManager.getAllSongs();
     }
 }
