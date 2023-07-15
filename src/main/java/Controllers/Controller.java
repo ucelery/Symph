@@ -1,7 +1,7 @@
 package Controllers;
 
 import Models.Database;
-import Models.Song;
+import Utilities.Song;
 
 import javax.swing.JOptionPane;
 

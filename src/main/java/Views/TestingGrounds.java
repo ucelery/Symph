@@ -5,7 +5,7 @@
 package Views;
 
 import Controllers.Controller;
-import Models.Song;
+import Utilities.Song;
 
 /**
  *
