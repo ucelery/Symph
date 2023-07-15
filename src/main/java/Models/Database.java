@@ -13,15 +13,20 @@ import com.cloudinary.*;
 import com.cloudinary.utils.ObjectUtils;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
+import com.mongodb.client.result.InsertOneResult;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 import org.bson.Document;
+import org.bson.types.ObjectId;
+import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.AudioFileIO;
 
 public class Database {    
     MongoClient mongoClient;
@@ -56,35 +61,53 @@ public class Database {
         return _threadCount <= 0;
     }
     
-    public void insertSong(Song song) {
+    public CompletableFuture<Song> insertSong(Song song) {
+        CompletableFuture<Song> future = new CompletableFuture<Song>();
+        
         File audioFile = song.getAudioFile();
         File coverFile = song.getCoverFile();
         
         // Upload the song and image cover
-        executor.submit(() -> {
-            Map<?, ?> audioRes = cloudinary.uploader().upload(audioFile, ObjectUtils.asMap(
+        new Thread(() -> {
+            try {
+                Map<?, ?> audioRes = cloudinary.uploader().upload(audioFile, ObjectUtils.asMap(
                     "resource_type", "video",
                     "use_filename", true,
                     "unique_filename", false,
                     "overwrite", true
-            ));
-            
-            Map<?, ?> imageRes = cloudinary.uploader().upload(coverFile, ObjectUtils.asMap(
-                "use_filename", true,
-                "unique_filename", false,
-                "overwrite", true
-            ));
-            
-            // Upload details to mongo
-            MongoCollection<Document> collection = database.getCollection("songs");
-            Document doc = new Document("artist", song.getArtist())
-                    .append("title", song.getTitle())
-                    .append("imageURL", imageRes.get("secure_url"))
-                    .append("audioURL", audioRes.get("secure_url"));
+                ));
 
-            collection.insertOne(doc);
-            return null;
-        });
+                Map<?, ?> imageRes = cloudinary.uploader().upload(coverFile, ObjectUtils.asMap(
+                    "use_filename", true,
+                    "unique_filename", false,
+                    "overwrite", true
+                ));
+
+                AudioFile audioFileObj = AudioFileIO.read(song.getAudioFile());
+                int duration = audioFileObj.getAudioHeader().getTrackLength();
+                
+                // Upload details to mongo
+                System.out.println("Is this thing working");
+                MongoCollection<Document> collection = database.getCollection("songs");
+                Document doc = new Document("artist", song.getArtist())
+                        .append("title", song.getTitle())
+                        .append("imageURL", imageRes.get("secure_url"))
+                        .append("audioURL", audioRes.get("secure_url"))
+                        .append("duration", duration);
+
+                collection.insertOne(doc);
+                
+                song.setAudioURL(audioRes.get("secure_url").toString());
+                song.setImageURL(audioRes.get("secure_url").toString());
+                
+                future.complete(song);
+            } catch (Exception e) {
+                e.printStackTrace();
+                future.completeExceptionally(e);
+            }
+        }).start();
+        
+        return future;
     }
     
     public Future<ArrayList<Song>> getSongsData() {
@@ -98,15 +121,26 @@ public class Database {
             while (cursor.hasNext()) {
                 Document doc = cursor.next();
                 Song song = new Song();
+                song.setPlaylistIDs(doc.getList("playlists", ObjectId.class));
                 song.setArtist(doc.getString("artist"));
                 song.setTitle(doc.getString("title"));
                 song.setImageURL(doc.getString("imageURL"));
                 song.setAudioURL(doc.getString("audioURL"));
+                song.setDuration(doc.getInteger("duration"));
                 
                 resSongs.add(song);
             }
             
             return resSongs;
         });
+    }
+    
+    public void updateSong(Song song) {
+        new Thread(() -> {
+            MongoCollection<Document> col = database.getCollection("songs");
+            
+            Document filter = new Document("_id", song.getID());
+            Document update = new Document("$set", new Document("playlists", song.getPlaylistIDs()));
+        }).start();
     }
 }

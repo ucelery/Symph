@@ -37,6 +37,10 @@
             <artifactId>jlayer</artifactId>
             <version>1.0.1</version>
         </dependency>
-
+        <dependency>
+            <groupId>net.jthink</groupId>
+            <artifactId>jaudiotagger</artifactId>
+            <version>3.0.1</version>
+        </dependency>
     </dependencies>
 </project>

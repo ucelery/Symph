@@ -5,6 +5,7 @@
 package Utilities;
 
 import java.io.File;
+import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.bson.codecs.pojo.annotations.BsonProperty;
@@ -15,15 +16,24 @@ import org.bson.types.ObjectId;
  * @author atond
  */
 public class Song {
-    private ObjectId id;
+    private ObjectId _id;
     private String title;
     private String artist;
     private String audioURL;
     private String imageURL;
-    private ObjectId playlistID;
+    private List<ObjectId> playlistID;
+    private int duration;
     
     private File audioFile;
     private File coverFile;
+    
+    public void setID(ObjectId id) {
+        this._id = id;
+    }
+    
+    public ObjectId getID() {
+        return this._id;
+    }
     
     public void setTitle(String title) {
         this.title = title;
@@ -101,11 +111,19 @@ public class Song {
         return this.imageURL;
     }
     
-    public void setPlaylistID(ObjectId playlistID) {
-        this.playlistID = playlistID;
+    public void setPlaylistIDs(List<ObjectId> playlistIDs) {
+        this.playlistID = playlistIDs;
     }
     
-    public ObjectId getPlaylistID() {
+    public List<ObjectId> getPlaylistIDs() {
         return this.playlistID;
+    }
+    
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+    
+    public int getDuration() {
+        return this.duration;
     }
 }

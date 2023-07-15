@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -77,27 +78,25 @@ public class Controller {
         }   
         
         JOptionPane.showMessageDialog(null, "Upload Complete!" + errorStr.toString(), "Success!", JOptionPane.INFORMATION_MESSAGE);
-        db.insertSong(song);
-    }
-    
-    public void playAudio(String cloudinaryURL) {
-        try {
-            BufferedInputStream in = new BufferedInputStream(new URL(cloudinaryURL).openStream());
-            Player player = new Player(in);
-            
-            // Start the audio playback on a separate thread
-            Thread playerThread = new Thread(() -> {
-                try {
-                    player.play();
-                } catch (JavaLayerException e) {
-                    e.printStackTrace();
-                }
+        
+        new Thread(() -> {
+            // Insert song in the database
+            CompletableFuture<Song> resSong = db.insertSong(song);
+            resSong.thenAccept(res -> {
+                // Update PlayerManager
+                playerManager.getAllSongs().add(song);
+                
+                // Update the View
+                System.out.println("[ APP ] Song has been added");
+            }).exceptionally(ex -> {
+                System.out.println("Future Exception: " + ex);
+                return null;
             });
-            playerThread.start();
-            
-        } catch (IOException | JavaLayerException e) {
-            e.printStackTrace();
-        }
+        }).start();
+    }
+        
+    public void playAudio() {
+        playerManager.play();
     }
     
     public void getSongs() {

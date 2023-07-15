@@ -160,7 +160,7 @@ public class TestingGrounds extends javax.swing.JFrame {
     }//GEN-LAST:event_submitButtonActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        controller.playAudio(cloudURL.getText());
+        controller.playAudio();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void getSongButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getSongButtonActionPerformed
