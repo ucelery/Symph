@@ -1,6 +1,7 @@
 package Models;
 
 // General Database
+import Utilities.Song;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
@@ -70,8 +71,8 @@ public class Database {
     }
     
     public void insertSong(Song song) {
-        File audioFile = song.audioFile;
-        File coverFile = song.coverFile;
+        File audioFile = song.getAudioFile();
+        File coverFile = song.getCoverFile();
         
         // Upload the song and image cover
         executor.submit(() -> {
@@ -90,8 +91,8 @@ public class Database {
             
             // Upload details to mongo
             MongoCollection<Document> collection = database.getCollection("songs");
-            Document doc = new Document("artist", song.artist)
-                    .append("title", song.title)
+            Document doc = new Document("artist", song.getArtist())
+                    .append("title", song.getTitle())
                     .append("imageURL", imageRes.get("secure_url"))
                     .append("audioURL", audioRes.get("secure_url"));
 
