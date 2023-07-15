@@ -12,11 +12,14 @@ import com.mongodb.client.gridfs.GridFSBuckets;
 import com.cloudinary.*;
 import com.cloudinary.utils.ObjectUtils;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 import org.bson.Document;
 
@@ -26,41 +29,24 @@ public class Database {
     GridFSBucket gridFSBucket;
     Cloudinary cloudinary;
     
+    Dotenv dotenv = Dotenv.load();
+    
     ThreadPoolExecutor executor = (ThreadPoolExecutor)Executors.newFixedThreadPool(10);
     int _threadCount = 0;
     
     public Database() {  
-        Dotenv dotenv = Dotenv.load();
-        
-        // execute MongoDB thread
-        executor.submit(() -> {
-            _threadCount++;
-            System.out.println("[ LOADING ] MongoDB");
-            mongoClient = MongoClients.create("mongodb+srv://" + dotenv.get("MONGO_USERNAME") + ":" + dotenv.get("MONGO_PASSWORD") + "@cluster0.xvzkkrp.mongodb.net/?retryWrites=true&w=majority");
-            database = mongoClient.getDatabase("Symph");
-            gridFSBucket = GridFSBuckets.create(database, "songs");
-            
-            System.out.println("[ READY ] MongoDB");
-            _threadCount--;
-
-            invokeExecutorFinish("[ APP ] Application is Ready!");
-            return null;
-        });
-        
-        // execute Cloudinary thread
-        executor.submit(() -> {
-            _threadCount++;
-            System.out.println("[ LOADING ] Cloudinary");
-
-            cloudinary = new Cloudinary("cloudinary://" + dotenv.get("CLOUDINARY_API_KEY") + ":" + dotenv.get("CLOUDINARY_API_SECRET") + "@" + dotenv.get("CLOUDINARY_NAME"));
-            cloudinary.config.secure = true;
-            
-            System.out.println("[ READY ] Cloudinary");
-            _threadCount--;
-            
-            invokeExecutorFinish("[ APP ] Application is Ready!");
-            return null;
-        });
+        System.out.println("[ WARNING ] Initialize MongoDB and Cloudinary manually.");
+    }
+    
+    public void initializeMongoDB() {
+        mongoClient = MongoClients.create("mongodb+srv://" + dotenv.get("MONGO_USERNAME") + ":" + dotenv.get("MONGO_PASSWORD") + "@cluster0.xvzkkrp.mongodb.net/?retryWrites=true&w=majority");
+        database = mongoClient.getDatabase("Symph");
+        gridFSBucket = GridFSBuckets.create(database, "songs");
+    }
+    
+    public void initializeCloudinary() {
+        cloudinary = new Cloudinary("cloudinary://" + dotenv.get("CLOUDINARY_API_KEY") + ":" + dotenv.get("CLOUDINARY_API_SECRET") + "@" + dotenv.get("CLOUDINARY_NAME"));
+        cloudinary.config.secure = true;    
     }
     
     private boolean invokeExecutorFinish(String msg) {
@@ -99,7 +85,28 @@ public class Database {
             collection.insertOne(doc);
             return null;
         });
+    }
+    
+    public Future<ArrayList<Song>> getSongsData() {
+        ArrayList<Song> resSongs = new ArrayList();
         
+        return executor.submit(() -> {
+            // Retrieve Data
+            MongoCollection<Document> col = database.getCollection("songs");
+            MongoCursor<Document> cursor = col.find().iterator();
 
+            while (cursor.hasNext()) {
+                Document doc = cursor.next();
+                Song song = new Song();
+                song.setArtist(doc.getString("artist"));
+                song.setTitle(doc.getString("title"));
+                song.setImageURL(doc.getString("imageURL"));
+                song.setAudioURL(doc.getString("audioURL"));
+                
+                resSongs.add(song);
+            }
+            
+            return resSongs;
+        });
     }
 }

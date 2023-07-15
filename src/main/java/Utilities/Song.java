@@ -7,19 +7,23 @@ package Utilities;
 import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.bson.codecs.pojo.annotations.BsonProperty;
+import org.bson.types.ObjectId;
 
 /**
  *
  * @author atond
  */
 public class Song {
-    String id;
-    int localId;
-    String title;
-    String artist;
+    private ObjectId id;
+    private String title;
+    private String artist;
+    private String audioURL;
+    private String imageURL;
+    private ObjectId playlistID;
     
-    File audioFile;
-    File coverFile;
+    private File audioFile;
+    private File coverFile;
     
     public void setTitle(String title) {
         this.title = title;
@@ -79,5 +83,29 @@ public class Song {
     
     public String getArtist() {
         return this.artist;
+    }
+    
+    public void setAudioURL(String url) {
+        this.audioURL = url;
+    }
+    
+    public String getAudioURL() {
+        return this.audioURL;
+    }
+    
+    public void setImageURL(String url) {
+        this.imageURL = url;
+    }
+    
+    public String getImageURL() {
+        return this.imageURL;
+    }
+    
+    public void setPlaylistID(ObjectId playlistID) {
+        this.playlistID = playlistID;
+    }
+    
+    public ObjectId getPlaylistID() {
+        return this.playlistID;
     }
 }

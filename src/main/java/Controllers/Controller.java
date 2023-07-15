@@ -1,6 +1,7 @@
 package Controllers;
 
 import Models.Database;
+import Utilities.PlayerManager;
 import Utilities.Song;
 
 import javax.swing.JOptionPane;
@@ -9,16 +10,49 @@ import java.util.ArrayList;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 
 public class Controller {
     Database db = new Database();
+    PlayerManager playerManager;
     
     public Controller() {
-        // Initialize Player
+        initializeApp();
+    }
+    
+    public void initializeApp() {
+        // Initialize App
         
+        Thread initThread = new Thread(() -> {
+            try {
+                // MongoDB
+                System.out.println("[ APP ] Initializing MongoDB");
+                db.initializeMongoDB();
+
+                // Cloudinary
+                System.out.println("[ APP ] Initializing Cloudinary");
+                db.initializeCloudinary();
+
+                // Initialize Player
+                System.out.println("[ APP ] Fetching Songs");
+                playerManager = new PlayerManager(db.getSongsData().get());
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ExecutionException ex) {
+                Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+            } 
+            
+            System.out.println("[ APP ] Application is Ready");
+            
+            // Exit Loading Screen
+        });
+        
+        initThread.start();
     }
     
     public void uploadSong(Song song) {
@@ -64,5 +98,18 @@ public class Controller {
         } catch (IOException | JavaLayerException e) {
             e.printStackTrace();
         }
+    }
+    
+    public void getSongs() {
+        try {
+            ArrayList<Song> songs = db.getSongsData().get();
+            System.out.println("[ APP ] Fetch Complete!");
+                
+            // Do something when Thread is finished
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        
+        System.out.println("[ APP ] Fetching Songs...");
     }
 }

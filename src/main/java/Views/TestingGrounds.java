@@ -30,6 +30,7 @@ public class TestingGrounds extends javax.swing.JFrame {
         submitButton = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         cloudURL = new javax.swing.JTextField();
+        getSongButton = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -78,6 +79,13 @@ public class TestingGrounds extends javax.swing.JFrame {
 
         cloudURL.setText("URL");
 
+        getSongButton.setText("GetSongs");
+        getSongButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                getSongButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -97,7 +105,10 @@ public class TestingGrounds extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(cloudURL)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton3)))
+                        .addComponent(jButton3))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(getSongButton)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -117,7 +128,9 @@ public class TestingGrounds extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(cloudURL))
-                .addContainerGap(180, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(getSongButton)
+                .addContainerGap(137, Short.MAX_VALUE))
         );
 
         pack();
@@ -149,6 +162,10 @@ public class TestingGrounds extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         controller.playAudio(cloudURL.getText());
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void getSongButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getSongButtonActionPerformed
+        controller.getSongs();
+    }//GEN-LAST:event_getSongButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -188,6 +205,7 @@ public class TestingGrounds extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField artistInput;
     private javax.swing.JTextField cloudURL;
+    private javax.swing.JToggleButton getSongButton;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
