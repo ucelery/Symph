@@ -15,13 +15,10 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javazoom.jl.decoder.JavaLayerException;
-import javazoom.jl.player.Player;
-
 public class Controller {
     Database db = new Database();
     PlayerManager playerManager;
-    
+
     public Controller() {
         initializeApp();
     }
@@ -97,6 +94,26 @@ public class Controller {
         
     public void playAudio() {
         playerManager.play();
+    }
+    
+    public void stopAudio() {
+        
+    }
+    
+    public void toggleAudio() {
+        if (playerManager.getState() == PlayerManager.PlayerState.PAUSED) {
+            playerManager.play();
+        } else if (playerManager.getState() == PlayerManager.PlayerState.PLAYING) {
+            playerManager.pause();
+        }
+    }
+    
+    public void pauseAudio() {
+        
+    }
+    
+    public void resumeAudio() {
+        
     }
     
     public ArrayList<Song> getSongs() {

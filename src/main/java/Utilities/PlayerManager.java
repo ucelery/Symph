@@ -12,17 +12,22 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import javazoom.jl.decoder.JavaLayerException;
-import javazoom.jl.player.Player;
 
 /**
  *
  * @author atond
  */
 public class PlayerManager {
+
+    public static PlayerState PlayerState;
     private ArrayList<Song> songBank = new ArrayList<Song>();
     private Queue<Song> musicQueue;
     private Song currentSong = null;
+    
+    private PlayerThread playerThread;
+    
+    public enum PlayerState { IDLE, PLAYING, PAUSED }
+    private PlayerState state = PlayerState.IDLE;
     
     public PlayerManager(ArrayList<Song> songs) {
         musicQueue = new LinkedList<Song>();
@@ -47,46 +52,41 @@ public class PlayerManager {
             musicQueue.remove(song);
     }
     
+    // [ Controls ] ============================================================
     public void play() {
+        state = PlayerState.PLAYING;
+        
         // If not playing anything, add all songs in songbank
-        if (currentSong == null && !songBank.isEmpty()) {
+        if (currentSong == null) {
+            if (songBank.isEmpty()) {
+                System.out.println("[ APP ] There are no songs to play, please add one");
+                return;
+            }
+                
             List<Song> list = new ArrayList(songBank);
             musicQueue.addAll(list);
             
-            playNextSong();
-        } else {
-            System.out.println("[ APP ] There are no songs to play, please add one");
-            return;
+            queueNextSong();
         }
         
-        try {
-            BufferedInputStream in = new BufferedInputStream(new URL(currentSong.getAudioURL()).openStream());
-            Player player = new Player(in);
-            
-            // Start the audio playback on a separate thread
-            Thread playerThread = new Thread(() -> {
-                try {
-                    player.play();
-                    
-                    while(!player.isComplete()) {
-                        System.out.println(player.getPosition() / 1000 + ":" + currentSong.getDuration());
-                    }
-                } catch (JavaLayerException e) {
-                    e.printStackTrace();
-                }
-            });
-            playerThread.start();
-            
-        } catch (IOException | JavaLayerException e) {
-            e.printStackTrace();
-        }
+        // Start the audio playback on a separate thread            
+        playerThread = new PlayerThread(currentSong);
+        playerThread.start();
     }
     
     public void playNextSong() {
-        // Dequeue top song from the queue
-       if (!musicQueue.isEmpty()) {
-           currentSong = musicQueue.poll();
-       }
+        queueNextSong();
+        play();
+    }
+    
+    public void pause() {
+        state = PlayerState.PAUSED;
+        playerThread.pause();
+    }
+    
+    public void resume() {
+        state = PlayerState.PLAYING;
+        playerThread.resumePlaying();
     }
     
     public void shuffle() {
@@ -99,11 +99,22 @@ public class PlayerManager {
         System.out.println("[ MUSIC.PLAYER ] Queue is shuffled");
     }
     
+    public void queueNextSong() {
+        // Dequeue top song from the queue
+       if (!musicQueue.isEmpty()) {
+           currentSong = musicQueue.poll();
+       } else System.out.println("[ MUSIC.PLAYER ] Queue is empty");
+    }
+    
     public Queue<Song> getQueue() {
         return musicQueue;
     }
     
     public ArrayList<Song> getAllSongs() {
         return songBank;
+    }
+    
+    public PlayerState getState() {
+        return state;
     }
 }
