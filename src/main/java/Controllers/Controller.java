@@ -102,7 +102,7 @@ public class Controller {
     
     public void toggleAudio() {
         if (playerManager.getState() == PlayerManager.PlayerState.PAUSED) {
-            playerManager.play();
+            playerManager.resume();
         } else if (playerManager.getState() == PlayerManager.PlayerState.PLAYING) {
             playerManager.pause();
         }
