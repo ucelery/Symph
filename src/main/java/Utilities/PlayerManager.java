@@ -12,6 +12,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 /**
  *
@@ -24,15 +27,17 @@ public class PlayerManager {
     private Queue<Song> musicQueue;
     private Song currentSong = null;
     
-    private PlayerThread playerThread;
-    
     public enum PlayerState { IDLE, PLAYING, PAUSED }
     private PlayerState state = PlayerState.IDLE;
     
+    private MediaPlayer player;
+    
     public PlayerManager(ArrayList<Song> songs) {
-        musicQueue = new LinkedList<Song>();
+        new JFXPanel(); // Initialize Toolkit for music playing DO NOT REMOVE
+        musicQueue = new LinkedList<Song>(songs);
         
         this.songBank = songs;
+        System.out.println("[ MUSIC.PLAYER ] Player initialized with " + songs.size() + " songs");
     }
     
     public void enqueueSong(Song song) {
@@ -52,26 +57,36 @@ public class PlayerManager {
             musicQueue.remove(song);
     }
     
+    public void start() {
+        // If no songs are passed, play all songs shuffled
+        if (musicQueue.isEmpty()) {
+            queueAllSongs();
+            shuffle();
+            queueNextSong();
+        }
+        
+        play();
+    }
+    
     // [ Controls ] ============================================================
     public void play() {
         state = PlayerState.PLAYING;
         
-        // If not playing anything, add all songs in songbank
-        if (currentSong == null) {
-            if (songBank.isEmpty()) {
-                System.out.println("[ APP ] There are no songs to play, please add one");
-                return;
-            }
-                
-            List<Song> list = new ArrayList(songBank);
-            musicQueue.addAll(list);
-            
+        // Make a separate thread for playing music
+        new Thread(() -> {
             queueNextSong();
-        }
-        
-        // Start the audio playback on a separate thread            
-        playerThread = new PlayerThread(currentSong);
-        playerThread.start();
+            if (currentSong == null) return; // Queue is empty
+            
+            Media media = new Media(currentSong.getAudioURL());
+            player = new MediaPlayer(media);
+            
+            System.out.println("[ MUSIC.PLAYER ] Now playing " + currentSong.getTitle() + " by " + currentSong.getArtist());
+            player.play();
+            
+            player.setOnEndOfMedia(() -> {
+                play();
+            });
+        }).start();
     }
     
     public void playNextSong() {
@@ -81,12 +96,16 @@ public class PlayerManager {
     
     public void pause() {
         state = PlayerState.PAUSED;
-        playerThread.pause();
+        player.pause();
+        
+        System.out.println("[ MUSIC.PLAYER ] Paused");
     }
     
     public void resume() {
         state = PlayerState.PLAYING;
-        playerThread.resumePlaying();
+        player.play();
+        
+        System.out.println("[ MUSIC.PLAYER ] Resumed");
     }
     
     public void shuffle() {
@@ -99,11 +118,20 @@ public class PlayerManager {
         System.out.println("[ MUSIC.PLAYER ] Queue is shuffled");
     }
     
+    public void stop() {
+        player.stop();
+        state = PlayerState.IDLE;
+    }
+    
+    // [ Music Queue-ing ] =====================================================
     public void queueNextSong() {
         // Dequeue top song from the queue
        if (!musicQueue.isEmpty()) {
            currentSong = musicQueue.poll();
-       } else System.out.println("[ MUSIC.PLAYER ] Queue is empty");
+       } else {
+           currentSong = null;
+           System.out.println("[ MUSIC.PLAYER ] Queue is empty");
+       }
     }
     
     public Queue<Song> getQueue() {
@@ -116,5 +144,10 @@ public class PlayerManager {
     
     public PlayerState getState() {
         return state;
+    }
+    
+    private void queueAllSongs() {
+        List<Song> list = new ArrayList(songBank);
+        musicQueue.addAll(list);
     }
 }

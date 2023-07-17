@@ -93,11 +93,11 @@ public class Controller {
     }
         
     public void playAudio() {
-        playerManager.play();
+        playerManager.start();
     }
     
     public void stopAudio() {
-        
+        playerManager.stop();
     }
     
     public void toggleAudio() {
@@ -109,11 +109,11 @@ public class Controller {
     }
     
     public void pauseAudio() {
-        
+        playerManager.pause();
     }
     
     public void resumeAudio() {
-        
+        playerManager.resume();
     }
     
     public ArrayList<Song> getSongs() {
