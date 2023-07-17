@@ -23,6 +23,7 @@ public class Song {
     private String imageURL;
     private List<ObjectId> playlistID;
     private int duration;
+    private String lyrics;
     
     private File audioFile;
     private File coverFile;
@@ -125,5 +126,13 @@ public class Song {
     
     public int getDuration() {
         return this.duration;
+    }
+    
+    public void setLyrics(String lyrics) {
+        this.lyrics = lyrics;
+    }
+    
+    public String getLyrics() {
+        return this.lyrics;
     }
 }
