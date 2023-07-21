@@ -10,6 +10,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -23,10 +25,11 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 
 public class PlayView extends javax.swing.JFrame {
+        URL coverUrl;
+
     public PlayView() throws MalformedURLException, IOException {
-        
+
         initComponents();
-        URL playUrl;
         int labelWidth = coverLabel.getWidth();
         
         // Create the CardLayout for the mainPanel
@@ -36,28 +39,36 @@ public class PlayView extends javax.swing.JFrame {
         
         
         
+        //slider 
+        progressSlider.setMinimum(0);
+        progressSlider.setMaximum(100);
+        progressSlider.setValue(0);
+        
+        
+        
         // Add the playingPanel and queuePanel to the mainPanel
         mainPanel.add(playingPanel, "playingPanel");
         mainPanel.add(queuePanel, "queuePanel");
 
         
-        playUrl = new URL("https://i.imgur.com/SeWohEu.png");
-        Image playImage = ImageIO.read(playUrl);
-        Image scaledPlay = playImage.getScaledInstance(labelWidth, -1, Image.SCALE_SMOOTH);
+        setCoverUrl("https://searchengineland.com/figz/wp-content/seloads/2015/09/google-g-logo-2015-1920.png");
+        Image coverImage = ImageIO.read(coverUrl);
+        Image scaledCover = coverImage.getScaledInstance(labelWidth, -1, Image.SCALE_SMOOTH);
         
         
-        ImageIcon playIcon = new ImageIcon(scaledPlay);
+        ImageIcon coverIcon = new ImageIcon(scaledCover);
         
-        coverLabel.setIcon(playIcon);
+        coverLabel.setIcon(coverIcon);
         
         
         
         
         /////////////////////////////testing
-      
+            // Assuming you have a List<Song> queueList to store the songs
         JPanel newSongPanel = createSongPanel("Title 1", "Artist 1", "42:69");
-        
         queueScroll.setViewportView(newSongPanel);
+
+        setLyricsArea();
  
         /////////////////////////////
        
@@ -261,11 +272,12 @@ public class PlayView extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(progressSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(playingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(playingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(forwardButton)
-                    .addComponent(playButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(backButton)
-                    .addComponent(pauseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(pauseButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(playingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(playButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(backButton)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(queueButton)
                 .addGap(0, 0, 0))
@@ -425,7 +437,6 @@ public class PlayView extends javax.swing.JFrame {
         lyricsArea.setForeground(new java.awt.Color(240, 240, 240));
         lyricsArea.setLineWrap(true);
         lyricsArea.setRows(5);
-        lyricsArea.setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Aliquet porttitor lacus luctus accumsan tortor posuere ac. Libero nunc consequat interdum varius sit amet mattis vulputate enim. A lacus vestibulum sed arcu non odio euismod. Faucibus scelerisque eleifend donec pretium. Mauris pellentesque pulvinar pellentesque habitant morbi tristique senectus et netus. Integer vitae justo eget magna fermentum iaculis. Morbi enim nunc faucibus a pellentesque sit amet porttitor eget. Lobortis elementum nibh tellus molestie nunc non blandit massa. Integer quis auctor elit sed vulputate mi. Nunc sed augue lacus viverra vitae. Dui faucibus in ornare quam viverra orci sagittis. Nec ullamcorper sit amet risus nullam eget felis eget nunc. Fringilla ut morbi tincidunt augue interdum velit euismod in pellentesque.  Pharetra pharetra massa massa ultricies. Auctor eu augue ut lectus arcu. In hac habitasse platea dictumst vestibulum rhoncus est. Et leo duis ut diam quam. In egestas erat imperdiet sed. Est ultricies integer quis auctor elit sed vulputate. Mattis pellentesque id nibh tortor id. Fringilla ut morbi tincidunt augue interdum velit euismod in. Bibendum ut tristique et egestas quis ipsum suspendisse ultrices. Consectetur lorem donec massa sapien faucibus et. Velit dignissim sodales ut eu. Nisl nunc mi ipsum faucibus vitae. Arcu odio ut sem nulla pharetra diam.  Nibh mauris cursus mattis molestie. Nulla facilisi nullam vehicula ipsum a arcu. Pellentesque nec nam aliquam sem. Magna fringilla urna porttitor rhoncus dolor purus non. Erat imperdiet sed euismod nisi porta. Lectus arcu bibendum at varius. Accumsan in nisl nisi scelerisque eu ultrices vitae auctor eu. Felis bibendum ut tristique et egestas. Risus quis varius quam quisque id. Venenatis tellus in metus vulputate eu. Tempus iaculis urna id volutpat lacus laoreet non curabitur. Placerat orci nulla pellentesque dignissim. Massa massa ultricies mi quis hendrerit dolor magna eget. Risus viverra adipiscing at in tellus integer feugiat scelerisque varius. Velit sed ullamcorper morbi tincidunt ornare massa eget egestas purus. Vel elit scelerisque mauris pellentesque pulvinar pellentesque habitant morbi. Iaculis nunc sed augue lacus viverra vitae. Porta non pulvinar neque laoreet suspendisse interdum consectetur.  Elit scelerisque mauris pellentesque pulvinar pellentesque habitant. Sed turpis tincidunt id aliquet risus feugiat in ante. Odio pellentesque diam volutpat commodo sed egestas. Egestas erat imperdiet sed euismod nisi porta lorem mollis. Venenatis urna cursus eget nunc scelerisque. Pulvinar pellentesque habitant morbi tristique senectus et netus et malesuada. Euismod nisi porta lorem mollis. A condimentum vitae sapien pellentesque habitant morbi tristique senectus. Felis bibendum ut tristique et egestas quis. Volutpat ac tincidunt vitae semper quis. Augue interdum velit euismod in pellentesque massa placerat. Etiam erat velit scelerisque in dictum non consectetur a erat. Eu facilisis sed odio morbi quis commodo odio aenean sed. Sodales neque sodales ut etiam sit amet nisl purus. Mattis rhoncus urna neque viverra justo nec. Odio morbi quis commodo odio aenean sed. Malesuada fames ac turpis egestas integer eget aliquet. Massa sed elementum tempus egestas sed sed risus. Enim nulla aliquet porttitor lacus luctus accumsan tortor posuere ac.  A scelerisque purus semper eget. Condimentum mattis pellentesque id nibh. Scelerisque varius morbi enim nunc faucibus a pellentesque. Et ultrices neque ornare aenean euismod elementum nisi quis. Diam sollicitudin tempor id eu nisl nunc mi. Egestas diam in arcu cursus euismod quis viverra. Dictum varius duis at consectetur lorem donec. Mus mauris vitae ultricies leo integer malesuada nunc vel. Mi sit amet mauris commodo quis imperdiet massa tincidunt nunc. Velit ut tortor pretium viverra suspendisse potenti nullam. Risus viverra adipiscing at in tellus integer feugiat scelerisque varius. Tellus at urna condimentum mattis pellentesque id nibh tortor. Adipiscing bibendum est ultricies integer quis. Ipsum consequat nisl vel pretium. Nunc faucibus a pellentesque sit amet porttitor eget. Aliquam malesuada bibendum arcu vitae elementum curabitur vitae nunc. Sit amet commodo nulla facilisi nullam vehicula ipsum. Suspendisse potenti nullam ac tortor vitae purus.");
         lyricsArea.setWrapStyleWord(true);
         lyricsArea.setBorder(null);
         lyricsArea.setCaretPosition(0);
@@ -582,7 +593,25 @@ private JPanel createSongPanel(String title, String artist, String duration) {
     return nextSongPanel1;
 }
 
+    
 
+
+
+    private void setSliderProgress(){ //hoping malala this shiz works
+
+//        mediaPlayer.currentTimeProperty().addListener((observable, oldValue, newValue) -> {
+//            Duration totalDuration = mediaPlayer.getTotalDuration();
+//            double progress = newValue.toMillis() / totalDuration.toMillis() * 100;
+//            progressSlider.setValue((int)progress);
+//        });
+//        
+    }
+
+    
+    private void setLyricsArea(){ //hoping dat dis works as well ehe
+        String lyrics = new String("test lyrics");
+        lyricsArea.setText(lyrics);
+    }
 
 
     private void queueButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_queueButtonMouseClicked
@@ -601,7 +630,13 @@ private JPanel createSongPanel(String title, String artist, String duration) {
         cardLayout.show(mainPanel, "playingPanel");
     }//GEN-LAST:event_returnButtonMouseClicked
 
-    
+    public void setCoverUrl(String urlString) {
+        try {
+            coverUrl = new URL(urlString);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
     
     public static void main(String args[]) {
         try {
@@ -636,6 +671,7 @@ private JPanel createSongPanel(String title, String artist, String duration) {
             }
         });
     }
+    
     
 
 
