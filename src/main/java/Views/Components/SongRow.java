@@ -3,6 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package Views.Components;
+import Utilities.Song;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 /**
  *
@@ -16,7 +19,12 @@ public class SongRow extends javax.swing.JPanel {
     public SongRow() {
         initComponents();
     }
-
+    
+    private void updateSongPanel(Song song){
+    String nextTitleLabel1 =song.getTitle();
+    String nextArtistLabel1 = song.getArtist();
+    int nextDurationLabel1 = song.getDuration();
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
