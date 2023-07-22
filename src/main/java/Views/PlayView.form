@@ -7,9 +7,6 @@
     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
       <Color blue="20" green="17" red="1a" type="rgb"/>
     </Property>
-    <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[1100, 600]"/>
-    </Property>
     <Property name="resizable" type="boolean" value="false"/>
   </Properties>
   <SyntheticProperties>
@@ -193,10 +190,6 @@
                   <Color blue="96" green="73" red="e2" type="rgb"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="&#xab;"/>
-                <Property name="toolTipText" type="java.lang.String" value=""/>
-                <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-                  <Color id="Hand Cursor"/>
-                </Property>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="forwardButton">
@@ -208,10 +201,6 @@
                   <Color blue="96" green="73" red="e2" type="rgb"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="&#xbb;"/>
-                <Property name="toolTipText" type="java.lang.String" value=""/>
-                <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-                  <Color id="Hand Cursor"/>
-                </Property>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="titleLabel">
@@ -325,10 +314,6 @@
                   <Color blue="96" green="73" red="e2" type="rgb"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="&#x25ba;"/>
-                <Property name="toolTipText" type="java.lang.String" value=""/>
-                <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-                  <Color id="Hand Cursor"/>
-                </Property>
                 <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[566, 512]"/>
                 </Property>
@@ -371,10 +356,6 @@
                   <Color blue="96" green="73" red="e2" type="rgb"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="II"/>
-                <Property name="toolTipText" type="java.lang.String" value=""/>
-                <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-                  <Color id="Hand Cursor"/>
-                </Property>
               </Properties>
             </Component>
           </SubComponents>
