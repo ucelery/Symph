@@ -4,6 +4,7 @@
  */
 package Utilities;
 
+import Utilities.MusicPlayer.MusicPlayerListener;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -21,7 +22,9 @@ import javafx.scene.media.MediaPlayer;
  * @author atond
  */
 public class PlayerManager {
-
+    public static PlayerManager Instance;
+    
+    private List<MusicPlayerListener> playerListeners = new ArrayList();
     public static PlayerState PlayerState;
     private ArrayList<Song> songBank = new ArrayList<Song>();
     private Queue<Song> musicQueue;
@@ -33,11 +36,33 @@ public class PlayerManager {
     private MediaPlayer player;
     
     public PlayerManager(ArrayList<Song> songs) {
+        if (Instance == null) {
+            Instance = this;
+        } else {
+            return;
+        }
+        
         new JFXPanel(); // Initialize Toolkit for music playing DO NOT REMOVE
         musicQueue = new LinkedList<Song>(songs);
         
         this.songBank = songs;
         System.out.println("[ MUSIC.PLAYER ] Player initialized with " + songs.size() + " songs");
+    }
+    
+    public void addListener(MusicPlayerListener e) {
+        playerListeners.add(e);
+    }
+    
+    public void invokeSongPlayEvent(Song song) {
+        for (MusicPlayerListener mpl : playerListeners) {
+            mpl.onSongPlay(song);
+        }
+    }
+    
+    public void invokeSongEndEvent(Song song) {
+        for (MusicPlayerListener mpl : playerListeners) {
+            mpl.onSongEnd(song);
+        }
     }
     
     public void enqueueSong(Song song) {
@@ -75,6 +100,8 @@ public class PlayerManager {
         // Make a separate thread for playing music
         new Thread(() -> {
             queueNextSong();
+            
+            invokeSongPlayEvent(currentSong);
             if (currentSong == null) return; // Queue is empty
             
             Media media = new Media(currentSong.getAudioURL());
@@ -84,6 +111,7 @@ public class PlayerManager {
             player.play();
             
             player.setOnEndOfMedia(() -> {
+                invokeSongEndEvent(currentSong);
                 play();
             });
         }).start();
@@ -144,6 +172,14 @@ public class PlayerManager {
     
     public PlayerState getState() {
         return state;
+    }
+    
+    public MediaPlayer getMediaPlayer() {
+        return player;
+    }
+    
+    public Song getCurrentSong() {
+        return currentSong;
     }
     
     private void queueAllSongs() {
