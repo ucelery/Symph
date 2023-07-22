@@ -134,10 +134,14 @@ public class PlayView extends javax.swing.JFrame {
         backButton.setFont(new java.awt.Font("Century Gothic", 1, 36)); // NOI18N
         backButton.setForeground(new java.awt.Color(226, 115, 150));
         backButton.setText("«");
+        backButton.setToolTipText("");
+        backButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         forwardButton.setFont(new java.awt.Font("Century Gothic", 1, 36)); // NOI18N
         forwardButton.setForeground(new java.awt.Color(226, 115, 150));
         forwardButton.setText("»");
+        forwardButton.setToolTipText("");
+        forwardButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         titleLabel.setFont(new java.awt.Font("Century Gothic", 0, 36)); // NOI18N
         titleLabel.setForeground(new java.awt.Color(240, 240, 240));
@@ -184,6 +188,8 @@ public class PlayView extends javax.swing.JFrame {
         playButton.setFont(new java.awt.Font("Century Gothic", 0, 32)); // NOI18N
         playButton.setForeground(new java.awt.Color(226, 115, 150));
         playButton.setText("►");
+        playButton.setToolTipText("");
+        playButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         playButton.setMaximumSize(new java.awt.Dimension(566, 512));
 
         leaveButton.setFont(new java.awt.Font("Century Gothic", 0, 32)); // NOI18N
@@ -202,6 +208,8 @@ public class PlayView extends javax.swing.JFrame {
         pauseButton.setFont(new java.awt.Font("Century Gothic", 1, 36)); // NOI18N
         pauseButton.setForeground(new java.awt.Color(226, 115, 150));
         pauseButton.setText("II");
+        pauseButton.setToolTipText("");
+        pauseButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         javax.swing.GroupLayout playingPanelLayout = new javax.swing.GroupLayout(playingPanel);
         playingPanel.setLayout(playingPanelLayout);
@@ -439,7 +447,6 @@ public class PlayView extends javax.swing.JFrame {
         lyricsArea.setRows(5);
         lyricsArea.setWrapStyleWord(true);
         lyricsArea.setBorder(null);
-        lyricsArea.setCaretPosition(0);
         lyricsArea.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         lyricsScroll.setViewportView(lyricsArea);
 
@@ -460,7 +467,7 @@ public class PlayView extends javax.swing.JFrame {
                 .addGap(0, 0, 0)
                 .addGroup(lyricsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(lyricsPanelLayout.createSequentialGroup()
-                        .addComponent(lyricsScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 594, Short.MAX_VALUE)
+                        .addComponent(lyricsScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 588, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(lyricsPanelLayout.createSequentialGroup()
                         .addComponent(lyricsLabel)

@@ -193,6 +193,10 @@
                   <Color blue="96" green="73" red="e2" type="rgb"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="&#xab;"/>
+                <Property name="toolTipText" type="java.lang.String" value=""/>
+                <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+                  <Color id="Hand Cursor"/>
+                </Property>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="forwardButton">
@@ -204,6 +208,10 @@
                   <Color blue="96" green="73" red="e2" type="rgb"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="&#xbb;"/>
+                <Property name="toolTipText" type="java.lang.String" value=""/>
+                <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+                  <Color id="Hand Cursor"/>
+                </Property>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="titleLabel">
@@ -317,6 +325,10 @@
                   <Color blue="96" green="73" red="e2" type="rgb"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="&#x25ba;"/>
+                <Property name="toolTipText" type="java.lang.String" value=""/>
+                <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+                  <Color id="Hand Cursor"/>
+                </Property>
                 <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[566, 512]"/>
                 </Property>
@@ -359,6 +371,10 @@
                   <Color blue="96" green="73" red="e2" type="rgb"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="II"/>
+                <Property name="toolTipText" type="java.lang.String" value=""/>
+                <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+                  <Color id="Hand Cursor"/>
+                </Property>
               </Properties>
             </Component>
           </SubComponents>
@@ -638,7 +654,7 @@
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="lyricsScroll" pref="594" max="32767" attributes="0"/>
+                          <Component id="lyricsScroll" pref="588" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
@@ -714,7 +730,6 @@
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="null"/>
                 </Property>
-                <Property name="caretPosition" type="int" value="0"/>
                 <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
                   <Color id="Default Cursor"/>
                 </Property>
