@@ -5,11 +5,20 @@ import Controllers.Controller;
 public class MainView extends javax.swing.JFrame {
     Controller controller;
     public MainView() {
-        controller = new Controller();
         
+        Thread initThread = new Thread(() -> {
+            // TODO Add Loading
+            
+            // Initialize Controller
+            controller = new Controller();
+            
+            // TODO Exit Loading
+            
+            // Initialize Components
+            initComponents();
+        });
         
-        
-        initComponents();
+        initThread.start();
     }
 
     @SuppressWarnings("unchecked")
