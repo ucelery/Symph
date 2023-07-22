@@ -57,13 +57,13 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
         int sec = currentDur - (min * 60);
         
         progressSlider.setValue(currentDur);
-        startLabel.setText(min + ":" + sec);
+        startLabel.setText(String.format("%02d", min) + ":" + String.format("%02d", sec));
     }
     
     private void setMaxDuration(int seconds) {
         int min = seconds / 60;
         int sec = seconds - (min * 60);
-        endLabel.setText(min + ":" + sec);
+        endLabel.setText(String.format("%02d", min) + ":" + String.format("%02d", sec));
         
         progressSlider.setMaximum(seconds);
     }
