@@ -4,6 +4,7 @@
  */
 package Views;
 
+import Controllers.Controller;
 import java.awt.CardLayout;
 import java.awt.Image;
 import java.io.BufferedReader;
@@ -22,12 +23,15 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * @author atond
  */
 public class PlayingView extends javax.swing.JPanel {
-
+    Controller controller;
+    
     /**
      * Creates new form PlayingView
      */
-    public PlayingView() {
+    public PlayingView(Controller controller) {
         initComponents();
+        
+        this.controller = controller;
         
         // Create the CardLayout for the mainPanel
         CardLayout cardLayout = new CardLayout();
@@ -85,7 +89,6 @@ public class PlayingView extends javax.swing.JPanel {
         playButton = new javax.swing.JLabel();
         leaveButton = new javax.swing.JLabel();
         queueButton = new javax.swing.JLabel();
-        pauseButton = new javax.swing.JLabel();
         queuePanel = new javax.swing.JPanel();
         returnButton = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -115,10 +118,12 @@ public class PlayingView extends javax.swing.JPanel {
         backButton.setFont(new java.awt.Font("Century Gothic", 1, 36)); // NOI18N
         backButton.setForeground(new java.awt.Color(226, 115, 150));
         backButton.setText("«");
+        backButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         forwardButton.setFont(new java.awt.Font("Century Gothic", 1, 36)); // NOI18N
         forwardButton.setForeground(new java.awt.Color(226, 115, 150));
         forwardButton.setText("»");
+        forwardButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         titleLabel.setFont(new java.awt.Font("Century Gothic", 0, 36)); // NOI18N
         titleLabel.setForeground(new java.awt.Color(240, 240, 240));
@@ -145,10 +150,12 @@ public class PlayingView extends javax.swing.JPanel {
         plusLabel.setFont(new java.awt.Font("Century Gothic", 0, 24)); // NOI18N
         plusLabel.setForeground(new java.awt.Color(115, 129, 137));
         plusLabel.setText("+");
+        plusLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         favButton.setFont(new java.awt.Font("Century Gothic", 0, 24)); // NOI18N
         favButton.setForeground(new java.awt.Color(115, 129, 137));
         favButton.setText("♥");
+        favButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         artistLabel.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
         artistLabel.setForeground(new java.awt.Color(240, 240, 240));
@@ -162,71 +169,73 @@ public class PlayingView extends javax.swing.JPanel {
         endLabel.setForeground(new java.awt.Color(240, 240, 240));
         endLabel.setText("XX:XX");
 
-        playButton.setFont(new java.awt.Font("Century Gothic", 0, 32)); // NOI18N
+        playButton.setFont(new java.awt.Font("Century Gothic", 1, 32)); // NOI18N
         playButton.setForeground(new java.awt.Color(226, 115, 150));
         playButton.setText("►");
+        playButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         playButton.setMaximumSize(new java.awt.Dimension(566, 512));
+        playButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                playButtonMousePressed(evt);
+            }
+        });
 
         leaveButton.setFont(new java.awt.Font("Century Gothic", 0, 32)); // NOI18N
         leaveButton.setForeground(new java.awt.Color(115, 126, 137));
         leaveButton.setText("<");
+        leaveButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         queueButton.setFont(new java.awt.Font("Century Gothic", 0, 32)); // NOI18N
         queueButton.setForeground(new java.awt.Color(115, 129, 137));
+        queueButton.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         queueButton.setText("≡");
+        queueButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         queueButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 queueButtonMouseClicked(evt);
             }
         });
 
-        pauseButton.setFont(new java.awt.Font("Century Gothic", 1, 36)); // NOI18N
-        pauseButton.setForeground(new java.awt.Color(226, 115, 150));
-        pauseButton.setText("II");
-
         javax.swing.GroupLayout playingPanelLayout = new javax.swing.GroupLayout(playingPanel);
         playingPanel.setLayout(playingPanelLayout);
         playingPanelLayout.setHorizontalGroup(
             playingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(playingPanelLayout.createSequentialGroup()
-                .addGroup(playingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(playingPanelLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(queueButton))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, playingPanelLayout.createSequentialGroup()
-                        .addContainerGap(57, Short.MAX_VALUE)
-                        .addGroup(playingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(progressSlider, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(titleLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 385, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(playingPanelLayout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addGroup(playingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(playingPanelLayout.createSequentialGroup()
-                                        .addComponent(startLabel)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(endLabel))
-                                    .addGroup(playingPanelLayout.createSequentialGroup()
-                                        .addComponent(plusLabel)
-                                        .addGap(140, 140, 140)
-                                        .addComponent(artistLabel)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(favButton))))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, playingPanelLayout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(leaveButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(coverPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(54, 54, 54)))
-                .addContainerGap(58, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(leaveButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(coverPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(112, 112, 112))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, playingPanelLayout.createSequentialGroup()
-                .addGap(172, 172, 172)
-                .addComponent(backButton)
-                .addGap(31, 31, 31)
-                .addComponent(playButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
-                .addComponent(pauseButton)
-                .addGap(33, 33, 33)
-                .addComponent(forwardButton)
+                .addContainerGap(57, Short.MAX_VALUE)
+                .addGroup(playingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(progressSlider, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(titleLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 385, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(playingPanelLayout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addGroup(playingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(playingPanelLayout.createSequentialGroup()
+                                .addComponent(startLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(endLabel))
+                            .addGroup(playingPanelLayout.createSequentialGroup()
+                                .addComponent(plusLabel)
+                                .addGap(140, 140, 140)
+                                .addComponent(artistLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(favButton))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, playingPanelLayout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(backButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(playButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(forwardButton)
+                        .addGap(2, 2, 2)))
+                .addGap(58, 58, 58))
+            .addGroup(playingPanelLayout.createSequentialGroup()
+                .addGap(423, 423, 423)
+                .addComponent(queueButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         playingPanelLayout.setVerticalGroup(
@@ -254,14 +263,13 @@ public class PlayingView extends javax.swing.JPanel {
                 .addComponent(progressSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(playingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(forwardButton)
-                    .addComponent(pauseButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(forwardButton, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(playingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(playButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(backButton)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(queueButton)
-                .addGap(0, 0, 0))
+                .addGap(44, 44, 44))
         );
 
         mainPanel.add(playingPanel, "card2");
@@ -435,7 +443,8 @@ public class PlayingView extends javax.swing.JPanel {
                 .addGap(0, 0, 0)
                 .addGroup(lyricsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(lyricsPanelLayout.createSequentialGroup()
-                        .addComponent(lyricsScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 588, Short.MAX_VALUE)
+                        .addGap(307, 307, 307)
+                        .addComponent(lyricsScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(lyricsPanelLayout.createSequentialGroup()
                         .addComponent(lyricsLabel)
@@ -512,6 +521,15 @@ public class PlayingView extends javax.swing.JPanel {
 
     }//GEN-LAST:event_lyricsButtonActionPerformed
 
+    private void playButtonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playButtonMousePressed
+        // Play Button
+        String playSym = "►";
+        String pauseSym = "II";
+        
+        controller.toggleAudio();
+        playButton.setText(playButton.getText() == playSym ? pauseSym : playSym);
+    }//GEN-LAST:event_playButtonMousePressed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel artistLabel;
@@ -535,7 +553,6 @@ public class PlayingView extends javax.swing.JPanel {
     private javax.swing.JPanel lyricsPanel;
     private javax.swing.JScrollPane lyricsScroll;
     private javax.swing.JPanel mainPanel;
-    private javax.swing.JLabel pauseButton;
     private javax.swing.JLabel playButton;
     private javax.swing.JPanel playingPanel;
     private javax.swing.JLabel plusLabel;

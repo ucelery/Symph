@@ -46,9 +46,7 @@ public class PlayView extends javax.swing.JFrame {
         
         
         
-        // Add the playingPanel and queuePanel to the mainPanel
-        mainPanel.add(playingPanel, "playingPanel");
-        mainPanel.add(queuePanel, "queuePanel");
+        
 
         
         setCoverUrl("https://searchengineland.com/figz/wp-content/seloads/2015/09/google-g-logo-2015-1920.png");

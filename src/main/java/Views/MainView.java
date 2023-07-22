@@ -1,7 +1,14 @@
 package Views;
 
+import Controllers.Controller;
+
 public class MainView extends javax.swing.JFrame {
+    Controller controller;
     public MainView() {
+        controller = new Controller();
+        
+        
+        
         initComponents();
     }
 
@@ -9,7 +16,7 @@ public class MainView extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        playingView1 = new Views.PlayingView();
+        playingView1 = new Views.PlayingView(controller);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.CardLayout());
