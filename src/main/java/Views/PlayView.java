@@ -68,7 +68,7 @@ public class PlayView extends javax.swing.JFrame {
         JPanel newSongPanel = createSongPanel("Title 1", "Artist 1", "42:69");
         queueScroll.setViewportView(newSongPanel);
 
-        setLyricsArea();
+        setLyricsArea("test lyrics");
  
         /////////////////////////////
        
@@ -608,8 +608,7 @@ private JPanel createSongPanel(String title, String artist, String duration) {
     }
 
     
-    private void setLyricsArea(){ //hoping dat dis works as well ehe
-        String lyrics = new String("test lyrics");
+    private void setLyricsArea(String lyrics){ //hoping dat dis works as well ehe
         lyricsArea.setText(lyrics);
     }
 
