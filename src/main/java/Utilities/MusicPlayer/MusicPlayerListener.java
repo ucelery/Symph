@@ -13,4 +13,5 @@ import Utilities.Song;
 public interface MusicPlayerListener {
     void onSongEnd(Song song);
     void onSongPlay(Song song);
+    void onSongPlaying(int secs);
 }

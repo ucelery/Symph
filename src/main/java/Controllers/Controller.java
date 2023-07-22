@@ -108,14 +108,6 @@ public class Controller {
         playerManager.resume();
     }
     
-    public Song getCurrentSong() {
-        return playerManager.getCurrentSong();
-    }
-    
-    public void setOnEndOfMedia(Runnable runnable) {
-        playerManager.getMediaPlayer().setOnEndOfMedia(runnable);
-    }
-    
     public ArrayList<Song> getSongs() {
         return playerManager.getAllSongs();
     }

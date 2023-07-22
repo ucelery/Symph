@@ -65,6 +65,12 @@ public class PlayerManager {
         }
     }
     
+    public void invokeSongPlayingEvent(int duration) {
+        for (MusicPlayerListener mpl : playerListeners) {
+            mpl.onSongPlaying(duration);
+        }
+    }
+    
     public void enqueueSong(Song song) {
         // If song is already in queue do not add it
         if (musicQueue.contains(song)) return;
@@ -113,6 +119,10 @@ public class PlayerManager {
             player.setOnEndOfMedia(() -> {
                 invokeSongEndEvent(currentSong);
                 play();
+            });
+            
+            player.currentTimeProperty().addListener((observableValue, oldDuration, newDuration) -> {
+                invokeSongPlayingEvent((int) newDuration.toSeconds());
             });
         }).start();
     }

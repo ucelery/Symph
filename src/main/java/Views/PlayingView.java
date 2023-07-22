@@ -5,6 +5,9 @@
 package Views;
 
 import Controllers.Controller;
+import Utilities.MusicPlayer.MusicPlayerListener;
+import Utilities.PlayerManager;
+import Utilities.Song;
 import java.awt.CardLayout;
 import java.awt.Image;
 import java.io.BufferedReader;
@@ -13,6 +16,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -22,7 +27,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  *
  * @author atond
  */
-public class PlayingView extends javax.swing.JPanel {
+public class PlayingView extends javax.swing.JPanel implements MusicPlayerListener {
     Controller controller;
     
     /**
@@ -31,6 +36,7 @@ public class PlayingView extends javax.swing.JPanel {
     public PlayingView(Controller controller) {
         initComponents();
         
+        PlayerManager.Instance.addListener(this);
         this.controller = controller;
         
         // Create the CardLayout for the mainPanel
@@ -46,8 +52,28 @@ public class PlayingView extends javax.swing.JPanel {
         lyricsArea.setText(lyrics);
     }
     
-    private void setSliderProgress(int currentDur, int maxDur){
-        // TODO add code here
+    private void setSliderProgress(int currentDur){
+        int min = currentDur / 60;
+        int sec = currentDur - (min * 60);
+        
+        progressSlider.setValue(currentDur);
+        startLabel.setText(min + ":" + sec);
+    }
+    
+    private void setMaxDuration(int seconds) {
+        int min = seconds / 60;
+        int sec = seconds - (min * 60);
+        endLabel.setText(min + ":" + sec);
+        
+        progressSlider.setMaximum(seconds);
+    }
+    
+    public void setArtistLabel(String artist) {
+        artistLabel.setText(artist);
+    }
+    
+    public void setTitleLabel(String title) {
+        titleLabel.setText(title);
     }
     
     public void setCoverUrl(String urlString) throws IOException {
@@ -526,8 +552,13 @@ public class PlayingView extends javax.swing.JPanel {
         String playSym = "►";
         String pauseSym = "II";
         
-        controller.toggleAudio();
-        playButton.setText(playButton.getText() == playSym ? pauseSym : playSym);
+        if (controller.getMusicPlayerStatus() == PlayerManager.PlayerState.IDLE) {
+            controller.playAudio();
+            playButton.setText(playButton.getText().equals(playSym) ? pauseSym : playSym);
+        } else {
+            controller.toggleAudio();
+            playButton.setText(playButton.getText().equals(playSym) ? pauseSym : playSym);
+        }
     }//GEN-LAST:event_playButtonMousePressed
 
 
@@ -565,4 +596,27 @@ public class PlayingView extends javax.swing.JPanel {
     private javax.swing.JLabel startLabel;
     private javax.swing.JLabel titleLabel;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void onSongEnd(Song song) {
+        return;
+    }
+
+    @Override
+    public void onSongPlay(Song song) {
+        try {
+            // Update Song Cover Image, Song Title, Song Artist, Lyrics (if any)
+            setCoverUrl(song.getImageURL());
+            setTitleLabel(song.getTitle());
+            setArtistLabel(song.getArtist());
+            setMaxDuration(song.getDuration());
+        } catch (IOException ex) {
+            Logger.getLogger(PlayingView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public void onSongPlaying(int secs) {
+        setSliderProgress(secs);
+    }
 }
