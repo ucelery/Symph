@@ -26,31 +26,23 @@ public class Controller {
     public void initializeApp() {
         // Initialize App
         
-        Thread initThread = new Thread(() -> {
-            try {
-                // MongoDB
-                System.out.println("[ APP ] Initializing MongoDB");
-                db.initializeMongoDB();
+        try {
+            // MongoDB
+            System.out.println("[ APP ] Initializing MongoDB");
+            db.initializeMongoDB();
 
-                // Cloudinary
-                System.out.println("[ APP ] Initializing Cloudinary");
-                db.initializeCloudinary();
+            // Cloudinary
+            System.out.println("[ APP ] Initializing Cloudinary");
+            db.initializeCloudinary();
 
-                // Initialize Player
-                System.out.println("[ APP ] Fetching Songs");
-                playerManager = new PlayerManager(db.getSongsData().get());
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ExecutionException ex) {
-                Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
-            } 
-            
-            System.out.println("[ APP ] Application is Ready");
-            
-            // Exit Loading Screen
-        });
-        
-        initThread.start();
+            // Initialize Player
+            System.out.println("[ APP ] Fetching Songs");
+            playerManager = new PlayerManager(db.getSongsData().get());
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ExecutionException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        } 
     }
     
     public void uploadSong(Song song) {
@@ -116,7 +108,19 @@ public class Controller {
         playerManager.resume();
     }
     
+    public Song getCurrentSong() {
+        return playerManager.getCurrentSong();
+    }
+    
+    public void setOnEndOfMedia(Runnable runnable) {
+        playerManager.getMediaPlayer().setOnEndOfMedia(runnable);
+    }
+    
     public ArrayList<Song> getSongs() {
         return playerManager.getAllSongs();
+    }
+    
+    public PlayerManager.PlayerState getMusicPlayerStatus() {
+        return playerManager.getState();
     }
 }
