@@ -5,10 +5,15 @@
 package Views;
 
 import java.awt.CardLayout;
+import java.awt.Image;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -23,8 +28,38 @@ public class PlayingView extends javax.swing.JPanel {
      */
     public PlayingView() {
         initComponents();
+        
+        // Create the CardLayout for the mainPanel
+        CardLayout cardLayout = new CardLayout();
+        mainPanel.setLayout(cardLayout);
+        
+        // Add the playingPanel and queuePanel to the mainPanel
+        mainPanel.add(playingPanel, "playingPanel");
+        mainPanel.add(queuePanel, "queuePanel");
     }
 
+    private void setLyricsArea(String lyrics){ //hoping dat dis works as well ehe
+        lyricsArea.setText(lyrics);
+    }
+    
+    private void setSliderProgress(int currentDur, int maxDur){
+        // TODO add code here
+    }
+    
+    public void setCoverUrl(String urlString) throws IOException {
+        try {
+            URL coverUrl = new URL(urlString);
+            Image coverImage = ImageIO.read(coverUrl);
+            
+            int labelWidth = coverLabel.getWidth();
+            Image scaledCover = coverImage.getScaledInstance(labelWidth, -1, Image.SCALE_SMOOTH);
+            ImageIcon coverIcon = new ImageIcon(scaledCover);
+            coverLabel.setIcon(coverIcon);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
