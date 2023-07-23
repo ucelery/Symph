@@ -4,15 +4,19 @@
  */
 package Views.Components;
 import Utilities.Song;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import java.awt.Image;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 /**
  *
  * @author atond
  */
 public class SongRow extends javax.swing.JPanel {
-
+    URL CoverUrl;
     /**
      * Creates new form SongRow
      */
@@ -20,10 +24,21 @@ public class SongRow extends javax.swing.JPanel {
         initComponents();
     }
     
-    private void updateSongPanel(Song song){
-    String nextTitleLabel1 =song.getTitle();
-    String nextArtistLabel1 = song.getArtist();
-    int nextDurationLabel1 = song.getDuration();
+    private void updateSongPanel(Song song) throws MalformedURLException, IOException{
+    currentTitleLabel1.setText(song.getTitle());
+    currentArtistLabel1.setText(song.getArtist());
+    currentDurationLabel1.setText(String.valueOf(song.getDuration()));
+    
+    
+    CoverUrl=(new URL(song.getImageURL()));
+    Image coverImage = ImageIO.read(CoverUrl);
+    int labelWidth = currentCoverLabel1.getWidth();
+    Image scaledCover = coverImage.getScaledInstance(labelWidth, -1, Image.SCALE_SMOOTH);
+    ImageIcon coverIcon = new ImageIcon(scaledCover);
+        
+    currentCoverLabel1.setIcon(coverIcon);
+        
+        
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -40,6 +55,8 @@ public class SongRow extends javax.swing.JPanel {
         currentCoverLabel1 = new javax.swing.JLabel();
         currentDurationLabel1 = new javax.swing.JLabel();
 
+        setBackground(new java.awt.Color(26, 23, 32));
+
         jLabel5.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(240, 240, 240));
         jLabel5.setText("ıIı");
@@ -53,7 +70,6 @@ public class SongRow extends javax.swing.JPanel {
         currentTitleLabel1.setText("Song Title");
 
         currentCoverLabel1.setForeground(new java.awt.Color(240, 240, 240));
-        currentCoverLabel1.setText("pictur");
         currentCoverLabel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(240, 240, 240)));
         currentCoverLabel1.setMaximumSize(new java.awt.Dimension(44, 44));
         currentCoverLabel1.setMinimumSize(new java.awt.Dimension(44, 44));
@@ -76,24 +92,31 @@ public class SongRow extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(currentTitleLabel1)
                     .addComponent(currentArtistLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 219, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 249, Short.MAX_VALUE)
                 .addComponent(currentDurationLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(36, 36, 36))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(currentCoverLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel5)
-                        .addComponent(currentDurationLabel1))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(currentTitleLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(currentArtistLabel1)))
+                        .addComponent(currentArtistLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(currentCoverLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(15, 15, 15)
+                                .addComponent(currentDurationLabel1)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(17, 17, 17)
+                .addComponent(jLabel5)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
