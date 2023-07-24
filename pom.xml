@@ -11,8 +11,20 @@
         <maven.compiler.target>19</maven.compiler.target>
         <exec.mainClass>com.mycompany.symph.Symph</exec.mainClass>
     </properties>
+    
     <dependencies>
-      <dependency>
+    <dependency>
+        <groupId>org.mongodb</groupId>
+        <artifactId>mongodb-driver-reactivestreams</artifactId>
+        <version>4.10.0</version>
+    </dependency>
+    
+    <dependency>
+        <groupId>com.formdev</groupId>
+        <artifactId>flatlaf</artifactId>
+        <version>3.1.1</version>
+    </dependency>
+    <dependency>
           <groupId>org.mongodb</groupId>
           <artifactId>mongodb-driver-reactivestreams</artifactId>
           <version>4.10.0</version>
