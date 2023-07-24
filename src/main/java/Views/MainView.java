@@ -138,7 +138,7 @@ public class MainView extends javax.swing.JFrame {
          i = Integer.toString(index);
          dateAdd = "7/21/2023";
          url = new URL("https://i.pinimg.com/564x/b0/e6/1d/b0e61d5ece63df22a54798667c1d5812.jpg");
-         listSongs.add(new Songs(songName, artistName, i, dateAdd, url));
+         // listSongs.add(new Songs(i));
          
          songName = "Pagtingin";
          artistName = "Ben&Ben";
@@ -146,7 +146,7 @@ public class MainView extends javax.swing.JFrame {
          i = Integer.toString(index);
          dateAdd = "7/21/2023";
          url = new URL("https://upload.wikimedia.org/wikipedia/en/7/7e/Ben%26Ben_-_Limasawa_Street.png");
-         listSongs.add(new Songs(songName, artistName, i, dateAdd, url));
+         // listSongs.add(new Songs(i));
          
          songName = "Estranghero";
          artistName = "Cup of Joe";
@@ -154,7 +154,7 @@ public class MainView extends javax.swing.JFrame {
          i = Integer.toString(index);
          dateAdd = "7/21/2023";
          url = new URL("https://i.scdn.co/image/ab67616d0000b273d6b243a650e138a3e549cab7");
-         listSongs.add(new Songs(songName, artistName, i, dateAdd, url));
+         // listSongs.add(new Songs(i));
          
          //display songs
           for(Songs songs : listSongs) {

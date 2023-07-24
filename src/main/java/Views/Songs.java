@@ -4,6 +4,7 @@
  */
 package Views;
 
+import Utilities.Song;
 import java.awt.Image;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -23,19 +24,19 @@ public class Songs extends javax.swing.JPanel {
     /**
      * Creates new form Songs
      */
-    public Songs(String songName, String artistName, String i, String dateAdd, URL url) throws IOException {
+    public Songs(String i, Song song) throws IOException {
         initComponents();
-        this.index = index;
+        this.index = Integer.parseInt(i);
         
         // Cache icon
         this.playIcon = putIcon(new URL("https://media.discordapp.net/attachments/976691420087853066/1133019625802694666/play-button-arrowhead_1.png"), 25);
         
         indexLabel.setText(i);
-        songTitle.setText(songName);
-        artist.setText(artistName);
-        date.setText(dateAdd);
+        songTitle.setText(song.getTitle());
+        artist.setText(song.getArtist());
+        date.setText(song.getFormattedDuration());
         
-        Image image = ImageIO.read(url);
+        Image image = ImageIO.read(song.getCoverFile());
         ImageIcon playlistImage = new ImageIcon(image);
         int labelWidth = songPic.getWidth();
         Image scaledImage = playlistImage.getImage().getScaledInstance(labelWidth, -1, Image.SCALE_SMOOTH);
