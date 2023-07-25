@@ -220,6 +220,9 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 queueButtonMouseClicked(evt);
             }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                queueButtonMousePressed(evt);
+            }
         });
 
         javax.swing.GroupLayout playingPanelLayout = new javax.swing.GroupLayout(playingPanel);
@@ -560,6 +563,12 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
            playButton.setText(playButton.getText().equals(playSym) ? pauseSym : playSym);
         }
     }//GEN-LAST:event_playButtonMousePressed
+
+    private void queueButtonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_queueButtonMousePressed
+        CardLayout cardLayout = (CardLayout) mainPanel.getLayout();
+        cardLayout.show(mainPanel, null);
+        cardLayout.show(mainPanel, "queuePanel");
+    }//GEN-LAST:event_queueButtonMousePressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
