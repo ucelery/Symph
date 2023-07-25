@@ -115,4 +115,8 @@ public class Controller {
     public PlayerManager.PlayerState getMusicPlayerStatus() {
         return playerManager.getState();
     }
+    
+    public PlayerManager getPlayerManager() {
+        return playerManager;
+    }
 }

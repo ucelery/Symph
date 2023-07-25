@@ -16,6 +16,10 @@ public class MainView extends javax.swing.JFrame {
             
             // Initialize Components
             initComponents();
+            
+            // Initialize Views
+            playingView1.setController(controller);
+            controller.getPlayerManager().addListener(playingView1);
         });
         
         initThread.start();

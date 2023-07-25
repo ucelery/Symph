@@ -28,6 +28,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * @author atond
  */
 public class PlayingView extends javax.swing.JPanel implements MusicPlayerListener {    
+    private Controller controller;
     /**
      * Creates new form PlayingView
      */
@@ -43,6 +44,10 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
         mainPanel.add(queuePanel, "queuePanel");
     }
 
+    public void setController(Controller controller) {
+        this.controller = controller;
+    }
+    
     private void setLyricsArea(String lyrics){ //hoping dat dis works as well ehe
         lyricsArea.setText(lyrics);
     }
@@ -544,16 +549,16 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
 
     private void playButtonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playButtonMousePressed
         // Play Button
-        // String playSym = "►";
-        // String pauseSym = "II";
+        String playSym = "►";
+        String pauseSym = "II";
         
-        // if (controller.getMusicPlayerStatus() == PlayerManager.PlayerState.IDLE) {
-        //     controller.playAudio();
-        //     playButton.setText(playButton.getText().equals(playSym) ? pauseSym : playSym);
-        // } else {
-        //     controller.toggleAudio();
-        //     playButton.setText(playButton.getText().equals(playSym) ? pauseSym : playSym);
-        // }
+        if (controller.getMusicPlayerStatus() == PlayerManager.PlayerState.IDLE) {
+            controller.playAudio();
+            playButton.setText(playButton.getText().equals(playSym) ? pauseSym : playSym);
+        } else {
+            controller.toggleAudio();
+           playButton.setText(playButton.getText().equals(playSym) ? pauseSym : playSym);
+        }
     }//GEN-LAST:event_playButtonMousePressed
 
 
