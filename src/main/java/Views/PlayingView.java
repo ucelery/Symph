@@ -27,17 +27,12 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  *
  * @author atond
  */
-public class PlayingView extends javax.swing.JPanel implements MusicPlayerListener {
-    Controller controller;
-    
+public class PlayingView extends javax.swing.JPanel implements MusicPlayerListener {    
     /**
      * Creates new form PlayingView
      */
-    public PlayingView(Controller controller) {
+    public PlayingView() {
         initComponents();
-        
-        PlayerManager.Instance.addListener(this);
-        this.controller = controller;
         
         // Create the CardLayout for the mainPanel
         CardLayout cardLayout = new CardLayout();
@@ -422,7 +417,7 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(queueScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(344, Short.MAX_VALUE))
+                .addContainerGap(319, Short.MAX_VALUE))
         );
 
         mainPanel.add(queuePanel, "card3");
@@ -487,7 +482,7 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, lyricsPanelLayout.createSequentialGroup()
                         .addComponent(lyricsButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                .addComponent(lyricsScroll)
+                .addComponent(lyricsScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 526, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -502,8 +497,8 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(lyricsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 612, Short.MAX_VALUE)
+            .addComponent(lyricsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 587, Short.MAX_VALUE)
+            .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -549,16 +544,16 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
 
     private void playButtonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playButtonMousePressed
         // Play Button
-        String playSym = "►";
-        String pauseSym = "II";
+        // String playSym = "►";
+        // String pauseSym = "II";
         
-        if (controller.getMusicPlayerStatus() == PlayerManager.PlayerState.IDLE) {
-            controller.playAudio();
-            playButton.setText(playButton.getText().equals(playSym) ? pauseSym : playSym);
-        } else {
-            controller.toggleAudio();
-            playButton.setText(playButton.getText().equals(playSym) ? pauseSym : playSym);
-        }
+        // if (controller.getMusicPlayerStatus() == PlayerManager.PlayerState.IDLE) {
+        //     controller.playAudio();
+        //     playButton.setText(playButton.getText().equals(playSym) ? pauseSym : playSym);
+        // } else {
+        //     controller.toggleAudio();
+        //     playButton.setText(playButton.getText().equals(playSym) ? pauseSym : playSym);
+        // }
     }//GEN-LAST:event_playButtonMousePressed
 
 
