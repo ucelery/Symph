@@ -37,6 +37,7 @@ public class MainView extends javax.swing.JFrame {
     
     Controller controller;
     private static MainView mainView;
+    Song songToUpload = new Song();
     
     public MainView() throws IOException {
         Thread initThread = new Thread(() -> {
@@ -161,8 +162,9 @@ public class MainView extends javax.swing.JFrame {
          //display songs
          int index = 0;
          for(Song song : songs) {
-            Songs newSongsRow = new Songs(String.valueOf(index), song);
+            Songs newSongsRow = new Songs(String.valueOf(index + 1), song);
             songsContainer.add(newSongsRow);
+            index++;
         }
      }
 
@@ -437,6 +439,11 @@ public class MainView extends javax.swing.JFrame {
         uploadImagebtn.setBackground(new java.awt.Color(39, 34, 47));
         uploadImagebtn.setBorder(null);
         uploadImagebtn.setPreferredSize(new java.awt.Dimension(135, 135));
+        uploadImagebtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                uploadImagebtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
@@ -517,6 +524,11 @@ public class MainView extends javax.swing.JFrame {
         uploadSong.setText("Upload Song");
         uploadSong.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(240, 240, 240)));
         uploadSong.setPreferredSize(new java.awt.Dimension(97, 35));
+        uploadSong.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                uploadSongActionPerformed(evt);
+            }
+        });
 
         titleSong1.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
         titleSong1.setForeground(new java.awt.Color(184, 184, 184));
@@ -572,6 +584,11 @@ public class MainView extends javax.swing.JFrame {
         submitBtn.setForeground(new java.awt.Color(240, 240, 240));
         submitBtn.setText("Save");
         submitBtn.setBorder(null);
+        submitBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                submitBtnActionPerformed(evt);
+            }
+        });
 
         cancelBtn.setBackground(new java.awt.Color(26, 23, 32));
         cancelBtn.setFont(new java.awt.Font("Century Gothic", 1, 15)); // NOI18N
@@ -693,6 +710,25 @@ public class MainView extends javax.swing.JFrame {
             inputArtist.setForeground(Color.decode("#7A7A7A"));
         }
     }//GEN-LAST:event_inputArtistFocusLost
+
+    private void submitBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitBtnActionPerformed
+        // On Add Song Submit
+        String songTitle = inputTitleSong.getText();
+        String songArtist = inputArtist.getText();
+        songToUpload.setArtist(songArtist);
+        songToUpload.setTitle(songTitle);
+        
+        controller.uploadSong(songToUpload);
+    }//GEN-LAST:event_submitBtnActionPerformed
+
+    private void uploadSongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadSongActionPerformed
+        // Upload Song File
+        songToUpload.setAudioFile();
+    }//GEN-LAST:event_uploadSongActionPerformed
+
+    private void uploadImagebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadImagebtnActionPerformed
+        songToUpload.setCoverFile();
+    }//GEN-LAST:event_uploadImagebtnActionPerformed
 
     public static void main(String args[]) {
         try {
