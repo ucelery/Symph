@@ -4,6 +4,7 @@
  */
 package Utilities;
 
+import Utilities.MusicPlayer.MusicPlayerListener;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -21,7 +22,9 @@ import javafx.scene.media.MediaPlayer;
  * @author atond
  */
 public class PlayerManager {
-
+    public static PlayerManager Instance;
+    
+    private List<MusicPlayerListener> playerListeners = new ArrayList();
     public static PlayerState PlayerState;
     private ArrayList<Song> songBank = new ArrayList<Song>();
     private Queue<Song> musicQueue;
@@ -33,6 +36,12 @@ public class PlayerManager {
     private MediaPlayer player;
     
     public PlayerManager(ArrayList<Song> songs) {
+        if (Instance == null) {
+            Instance = this;
+        } else {
+            return;
+        }
+        
         new JFXPanel(); // Initialize Toolkit for music playing DO NOT REMOVE
         musicQueue = new LinkedList<Song>(songs);
         
@@ -40,11 +49,46 @@ public class PlayerManager {
         System.out.println("[ MUSIC.PLAYER ] Player initialized with " + songs.size() + " songs");
     }
     
+    public void addListener(MusicPlayerListener e) {
+        playerListeners.add(e);
+    }
+    
+    public void invokeSongPlayEvent(Song song) {
+        for (MusicPlayerListener mpl : playerListeners) {
+            mpl.onSongPlay(song);
+        }
+    }
+    
+    public void invokeSongEndEvent(Song song) {
+        for (MusicPlayerListener mpl : playerListeners) {
+            mpl.onSongEnd(song);
+        }
+    }
+    
+    public void invokeSongPlayingEvent(int duration) {
+        for (MusicPlayerListener mpl : playerListeners) {
+            mpl.onSongPlaying(duration);
+        }
+    }
+    
+    public void invokeQueueUpdateEvent() {
+        for (MusicPlayerListener mpl : playerListeners) {
+            mpl.onQueueUpdate(musicQueue);
+        }
+    }
+    
+    public void invokeQueueEndEvent() {
+        for (MusicPlayerListener mpl : playerListeners) {
+            mpl.onQueueEnd();
+        }
+    }
+    
     public void enqueueSong(Song song) {
         // If song is already in queue do not add it
         if (musicQueue.contains(song)) return;
         
         musicQueue.offer(song);
+        invokeQueueUpdateEvent();
     }
     
     public void enqueuePlaylist(Playlist playlist) {
@@ -75,16 +119,25 @@ public class PlayerManager {
         // Make a separate thread for playing music
         new Thread(() -> {
             queueNextSong();
+            
             if (currentSong == null) return; // Queue is empty
             
             Media media = new Media(currentSong.getAudioURL());
             player = new MediaPlayer(media);
             
+            invokeSongPlayEvent(currentSong);
+            invokeQueueUpdateEvent();
+            
             System.out.println("[ MUSIC.PLAYER ] Now playing " + currentSong.getTitle() + " by " + currentSong.getArtist());
             player.play();
             
             player.setOnEndOfMedia(() -> {
+                invokeSongEndEvent(currentSong);
                 play();
+            });
+            
+            player.currentTimeProperty().addListener((observableValue, oldDuration, newDuration) -> {
+                invokeSongPlayingEvent((int) newDuration.toSeconds());
             });
         }).start();
     }
@@ -128,9 +181,12 @@ public class PlayerManager {
         // Dequeue top song from the queue
        if (!musicQueue.isEmpty()) {
            currentSong = musicQueue.poll();
+           invokeQueueUpdateEvent();
        } else {
            currentSong = null;
            System.out.println("[ MUSIC.PLAYER ] Queue is empty");
+           state = PlayerState.IDLE;
+           invokeQueueEndEvent();
        }
     }
     
@@ -144,6 +200,14 @@ public class PlayerManager {
     
     public PlayerState getState() {
         return state;
+    }
+    
+    public MediaPlayer getMediaPlayer() {
+        return player;
+    }
+    
+    public Song getCurrentSong() {
+        return currentSong;
     }
     
     private void queueAllSongs() {

@@ -46,9 +46,7 @@ public class PlayView extends javax.swing.JFrame {
         
         
         
-        // Add the playingPanel and queuePanel to the mainPanel
-        mainPanel.add(playingPanel, "playingPanel");
-        mainPanel.add(queuePanel, "queuePanel");
+        
 
         
         setCoverUrl("https://searchengineland.com/figz/wp-content/seloads/2015/09/google-g-logo-2015-1920.png");
@@ -118,7 +116,6 @@ public class PlayView extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Symph [Playing]");
         setBackground(new java.awt.Color(26, 23, 32));
-        setMaximumSize(new java.awt.Dimension(1100, 600));
         setResizable(false);
 
         mainPanel.setBackground(new java.awt.Color(26, 23, 32));
@@ -439,7 +436,6 @@ public class PlayView extends javax.swing.JFrame {
         lyricsArea.setRows(5);
         lyricsArea.setWrapStyleWord(true);
         lyricsArea.setBorder(null);
-        lyricsArea.setCaretPosition(0);
         lyricsArea.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         lyricsScroll.setViewportView(lyricsArea);
 
@@ -460,7 +456,7 @@ public class PlayView extends javax.swing.JFrame {
                 .addGap(0, 0, 0)
                 .addGroup(lyricsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(lyricsPanelLayout.createSequentialGroup()
-                        .addComponent(lyricsScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 594, Short.MAX_VALUE)
+                        .addComponent(lyricsScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 588, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(lyricsPanelLayout.createSequentialGroup()
                         .addComponent(lyricsLabel)

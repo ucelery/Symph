@@ -27,6 +27,8 @@ import javax.swing.border.EmptyBorder;
     see more ng playlist tabs
 */
 
+import Controllers.Controller;
+
 public class MainView extends javax.swing.JFrame {
     ArrayList<PlaylistTab> listPlaylists = new ArrayList<>();
     ArrayList<Songs> listSongs = new ArrayList<>();
@@ -72,7 +74,6 @@ public class MainView extends javax.swing.JFrame {
         createSongPanel();
         setLocationRelativeTo(null);
         setResizable(false);
-         
     }
     
     private ImageIcon putIcon(URL imageURL, int width) throws IOException{
@@ -165,7 +166,6 @@ public class MainView extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-
         MainPanel = new javax.swing.JPanel();
         SubPanel1 = new javax.swing.JPanel();
         songPlay1 = new javax.swing.JPanel();
