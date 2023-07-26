@@ -27,7 +27,7 @@ public class SongRow extends javax.swing.JPanel {
     public void updateSongPanel(Song song) throws MalformedURLException, IOException{
     currentTitleLabel1.setText(song.getTitle());
     currentArtistLabel1.setText(song.getArtist());
-    currentDurationLabel1.setText(String.valueOf(song.getDuration()));
+    currentDurationLabel1.setText(String.valueOf(song.getFormattedDuration()));
     
     
     CoverUrl=(new URL(song.getImageURL()));

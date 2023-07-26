@@ -135,4 +135,11 @@ public class Song {
     public String getLyrics() {
         return this.lyrics;
     }
+    
+    public String getFormattedDuration() {
+        int min = this.duration / 60;
+        int sec = this.duration - (min * 60);
+      
+        return String.format("%02d", min) + ":" + String.format("%02d", sec);
+    }
 }
