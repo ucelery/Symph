@@ -28,17 +28,45 @@ import javax.swing.border.EmptyBorder;
 */
 
 import Controllers.Controller;
+import Utilities.Song;
+import java.net.MalformedURLException;
 
 public class MainView extends javax.swing.JFrame {
     ArrayList<PlaylistTab> listPlaylists = new ArrayList<>();
-    ArrayList<Songs> listSongs = new ArrayList<>();
     private CardLayout cardLayout;
-    int index = 0;
-    String songName, artistName, i, dateAdd;
-    URL url;
+    
+    Controller controller;
+    private static MainView mainView;
+    
     public MainView() throws IOException {
-        initComponents();
+        Thread initThread = new Thread(() -> {
+            // TODO Add Loading
+            
+            // Initialize Controller
+            controller = new Controller();
+            
+            // Initialize Components
+            initComponents();
+            
+            // Initialize Views
+            try {
+                playingView1.setController(controller);
+                controller.getPlayerManager().addListener(playingView1);
+                initSongComponents();
+            } catch (IOException ex) {
+                Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            // TODO Exit Loading
+            
+            // Show Main View
+            mainView.setVisible(true);
+        });
         
+        initThread.start();
+    }
+    
+    private void initSongComponents() throws MalformedURLException, IOException {
         //plus icon beside both playlist and My song labels
         addPlaylist.setIcon(putIcon(new URL("https://i.imgur.com/OE3vVd4.png"), 22));
         addSongs.setIcon(putIcon(new URL("https://i.imgur.com/OE3vVd4.png"), 22));
@@ -67,11 +95,11 @@ public class MainView extends javax.swing.JFrame {
         
         //stoko kasi ng dashed panel with custom thickness and distance (u can find the CustomDashedBorder class sa Views.Custom package
         jPanel9.setBorder(new CustomDashedBorder(Color.decode("#B8B8B8"), 3, 10, 8));
-         
+        
         
         setSize(1114, 638);
         createPlaylistPanel();
-        createSongPanel();
+        createSongPanel(controller.getSongs());
         setLocationRelativeTo(null);
         setResizable(false);
     }
@@ -129,43 +157,19 @@ public class MainView extends javax.swing.JFrame {
         }
      }
      
-     private void createSongPanel() throws IOException {
-         // insert all songs from database
-         
-         //sample songs to insert in an array
-         songName = "Duda";
-         artistName = "Zild";
-         index ++;
-         i = Integer.toString(index);
-         dateAdd = "7/21/2023";
-         url = new URL("https://i.pinimg.com/564x/b0/e6/1d/b0e61d5ece63df22a54798667c1d5812.jpg");
-         // listSongs.add(new Songs(i));
-         
-         songName = "Pagtingin";
-         artistName = "Ben&Ben";
-         index ++;
-         i = Integer.toString(index);
-         dateAdd = "7/21/2023";
-         url = new URL("https://upload.wikimedia.org/wikipedia/en/7/7e/Ben%26Ben_-_Limasawa_Street.png");
-         // listSongs.add(new Songs(i));
-         
-         songName = "Estranghero";
-         artistName = "Cup of Joe";
-         index ++;
-         i = Integer.toString(index);
-         dateAdd = "7/21/2023";
-         url = new URL("https://i.scdn.co/image/ab67616d0000b273d6b243a650e138a3e549cab7");
-         // listSongs.add(new Songs(i));
-         
+     private void createSongPanel(ArrayList<Song> songs) throws IOException {
          //display songs
-          for(Songs songs : listSongs) {
-            songsContainer.add(songs);
+         int index = 0;
+         for(Song song : songs) {
+            Songs newSongsRow = new Songs(String.valueOf(index), song);
+            songsContainer.add(newSongsRow);
         }
      }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+
         MainPanel = new javax.swing.JPanel();
         SubPanel1 = new javax.swing.JPanel();
         songPlay1 = new javax.swing.JPanel();
@@ -204,8 +208,9 @@ public class MainView extends javax.swing.JFrame {
         song = new javax.swing.JLabel();
         uploadSong = new javax.swing.JButton();
         titleSong1 = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
-        cancel = new javax.swing.JButton();
+        submitBtn = new javax.swing.JButton();
+        cancelBtn = new javax.swing.JButton();
+        playingView1 = new Views.PlayingView();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(26, 23, 32));
@@ -376,7 +381,7 @@ public class MainView extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Logo here");
         jPanel1.add(jLabel1);
-        jLabel1.setBounds(10, 10, 100, 16);
+        jLabel1.setBounds(10, 10, 100, 15);
 
         songPlay.setBackground(new java.awt.Color(26, 23, 32));
         songPlay.setLayout(null);
@@ -405,6 +410,7 @@ public class MainView extends javax.swing.JFrame {
             SubPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(SubPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
                 .addComponent(SubPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 510, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(SubPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(songPlay1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -561,21 +567,21 @@ public class MainView extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jButton3.setBackground(new java.awt.Color(226, 115, 150));
-        jButton3.setFont(new java.awt.Font("Century Gothic", 1, 15)); // NOI18N
-        jButton3.setForeground(new java.awt.Color(240, 240, 240));
-        jButton3.setText("Save");
-        jButton3.setBorder(null);
+        submitBtn.setBackground(new java.awt.Color(226, 115, 150));
+        submitBtn.setFont(new java.awt.Font("Century Gothic", 1, 15)); // NOI18N
+        submitBtn.setForeground(new java.awt.Color(240, 240, 240));
+        submitBtn.setText("Save");
+        submitBtn.setBorder(null);
 
-        cancel.setBackground(new java.awt.Color(26, 23, 32));
-        cancel.setFont(new java.awt.Font("Century Gothic", 1, 15)); // NOI18N
-        cancel.setForeground(new java.awt.Color(226, 115, 150));
-        cancel.setText("Cancel");
-        cancel.setBorder(null);
-        cancel.setPreferredSize(new java.awt.Dimension(85, 35));
-        cancel.addActionListener(new java.awt.event.ActionListener() {
+        cancelBtn.setBackground(new java.awt.Color(26, 23, 32));
+        cancelBtn.setFont(new java.awt.Font("Century Gothic", 1, 15)); // NOI18N
+        cancelBtn.setForeground(new java.awt.Color(226, 115, 150));
+        cancelBtn.setText("Cancel");
+        cancelBtn.setBorder(null);
+        cancelBtn.setPreferredSize(new java.awt.Dimension(85, 35));
+        cancelBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelActionPerformed(evt);
+                cancelBtnActionPerformed(evt);
             }
         });
 
@@ -585,9 +591,9 @@ public class MainView extends javax.swing.JFrame {
             addSongPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(addSongPanelLayout.createSequentialGroup()
                 .addContainerGap(691, Short.MAX_VALUE)
-                .addComponent(cancel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cancelBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(40, 40, 40)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(submitBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(199, Short.MAX_VALUE))
             .addGroup(addSongPanelLayout.createSequentialGroup()
                 .addGap(200, 200, 200)
@@ -601,12 +607,13 @@ public class MainView extends javax.swing.JFrame {
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(addSongPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cancel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cancelBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(submitBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(107, Short.MAX_VALUE))
         );
 
         MainPanel.add(addSongPanel, "card4");
+        MainPanel.add(playingView1, "card4");
 
         getContentPane().add(MainPanel);
         MainPanel.setBounds(0, 0, 1100, 600);
@@ -647,13 +654,13 @@ public class MainView extends javax.swing.JFrame {
         fullScreen.setText("Full Screen");
     }//GEN-LAST:event_fullScreenMouseExited
 
-    private void cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelActionPerformed
+    private void cancelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelBtnActionPerformed
         // changing from add song to main view card panel (di ko lam bat ang layu nila sa isat isa ditu)
         MainPanel.removeAll();
         MainPanel.add(SubPanel1);
         MainPanel.repaint();
         MainPanel.revalidate();
-    }//GEN-LAST:event_cancelActionPerformed
+    }//GEN-LAST:event_cancelBtnActionPerformed
 
     private void inputTitleSongFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_inputTitleSongFocusGained
         // when user clicks on jtextfield to input song title, mawawala ung placeholder
@@ -697,7 +704,8 @@ public class MainView extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    new MainView().setVisible(true);
+                    mainView = new MainView();
+                    mainView.setVisible(false); // Initially Hidden since we have to load stuff first
                 } catch (IOException ex) {
                     Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -716,11 +724,10 @@ public class MainView extends javax.swing.JFrame {
     private javax.swing.JLabel artist;
     private javax.swing.JPanel block3;
     private javax.swing.JPanel block4;
-    private javax.swing.JButton cancel;
+    private javax.swing.JButton cancelBtn;
     private javax.swing.JButton fullScreen;
     private javax.swing.JTextField inputArtist;
     private javax.swing.JTextField inputTitleSong;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -735,6 +742,7 @@ public class MainView extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTextField1;
+    private Views.PlayingView playingView1;
     private javax.swing.JPanel playlistContainer;
     private javax.swing.JButton seeMore;
     private javax.swing.JLabel song;
@@ -742,6 +750,7 @@ public class MainView extends javax.swing.JFrame {
     private javax.swing.JPanel songPlay;
     private javax.swing.JPanel songPlay1;
     private javax.swing.JPanel songsContainer;
+    private javax.swing.JButton submitBtn;
     private javax.swing.JLabel titleSong;
     private javax.swing.JLabel titleSong1;
     private javax.swing.JButton uploadImagebtn;
