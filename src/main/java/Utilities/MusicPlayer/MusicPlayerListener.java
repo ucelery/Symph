@@ -5,6 +5,7 @@
 package Utilities.MusicPlayer;
 
 import Utilities.Song;
+import java.util.Queue;
 
 /**
  *
@@ -14,4 +15,5 @@ public interface MusicPlayerListener {
     void onSongEnd(Song song);
     void onSongPlay(Song song);
     void onSongPlaying(int secs);
+    void onQueueUpdate(Queue<Song> songs);
 }

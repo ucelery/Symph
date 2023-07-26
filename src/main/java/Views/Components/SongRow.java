@@ -24,7 +24,7 @@ public class SongRow extends javax.swing.JPanel {
         initComponents();
     }
     
-    private void updateSongPanel(Song song) throws MalformedURLException, IOException{
+    public void updateSongPanel(Song song) throws MalformedURLException, IOException{
     currentTitleLabel1.setText(song.getTitle());
     currentArtistLabel1.setText(song.getArtist());
     currentDurationLabel1.setText(String.valueOf(song.getDuration()));
@@ -32,7 +32,7 @@ public class SongRow extends javax.swing.JPanel {
     
     CoverUrl=(new URL(song.getImageURL()));
     Image coverImage = ImageIO.read(CoverUrl);
-    int labelWidth = currentCoverLabel1.getWidth();
+    int labelWidth = currentCoverLabel1.getPreferredSize().width;
     Image scaledCover = coverImage.getScaledInstance(labelWidth, -1, Image.SCALE_SMOOTH);
     ImageIcon coverIcon = new ImageIcon(scaledCover);
         

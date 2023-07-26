@@ -119,4 +119,8 @@ public class Controller {
     public PlayerManager getPlayerManager() {
         return playerManager;
     }
+    
+    public void updateSong(Song song) {
+        db.updateSong(song);
+    }
 }

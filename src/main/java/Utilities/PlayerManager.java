@@ -71,11 +71,18 @@ public class PlayerManager {
         }
     }
     
+    public void invokeQueueUpdateEvent() {
+        for (MusicPlayerListener mpl : playerListeners) {
+            mpl.onQueueUpdate(musicQueue);
+        }
+    }
+    
     public void enqueueSong(Song song) {
         // If song is already in queue do not add it
         if (musicQueue.contains(song)) return;
         
         musicQueue.offer(song);
+        invokeQueueUpdateEvent();
     }
     
     public void enqueuePlaylist(Playlist playlist) {
@@ -107,11 +114,13 @@ public class PlayerManager {
         new Thread(() -> {
             queueNextSong();
             
-            invokeSongPlayEvent(currentSong);
             if (currentSong == null) return; // Queue is empty
             
             Media media = new Media(currentSong.getAudioURL());
             player = new MediaPlayer(media);
+            
+            invokeSongPlayEvent(currentSong);
+            invokeQueueUpdateEvent();
             
             System.out.println("[ MUSIC.PLAYER ] Now playing " + currentSong.getTitle() + " by " + currentSong.getArtist());
             player.play();
@@ -166,6 +175,7 @@ public class PlayerManager {
         // Dequeue top song from the queue
        if (!musicQueue.isEmpty()) {
            currentSong = musicQueue.poll();
+           invokeQueueUpdateEvent();
        } else {
            currentSong = null;
            System.out.println("[ MUSIC.PLAYER ] Queue is empty");
