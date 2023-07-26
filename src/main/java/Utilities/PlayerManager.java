@@ -179,6 +179,7 @@ public class PlayerManager {
        } else {
            currentSong = null;
            System.out.println("[ MUSIC.PLAYER ] Queue is empty");
+           state = PlayerState.IDLE;
        }
     }
     
