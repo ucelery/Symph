@@ -16,4 +16,5 @@ public interface MusicPlayerListener {
     void onSongPlay(Song song);
     void onSongPlaying(int secs);
     void onQueueUpdate(Queue<Song> songs);
+    void onQueueEnd();
 }

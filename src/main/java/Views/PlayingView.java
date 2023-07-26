@@ -639,4 +639,9 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
             }
         }
     }
+
+    @Override
+    public void onQueueEnd() {
+        playButton.setText("II");
+    }
 }

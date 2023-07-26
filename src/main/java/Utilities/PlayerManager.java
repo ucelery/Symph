@@ -77,6 +77,12 @@ public class PlayerManager {
         }
     }
     
+    public void invokeQueueEndEvent() {
+        for (MusicPlayerListener mpl : playerListeners) {
+            mpl.onQueueEnd();
+        }
+    }
+    
     public void enqueueSong(Song song) {
         // If song is already in queue do not add it
         if (musicQueue.contains(song)) return;
@@ -180,6 +186,7 @@ public class PlayerManager {
            currentSong = null;
            System.out.println("[ MUSIC.PLAYER ] Queue is empty");
            state = PlayerState.IDLE;
+           invokeQueueEndEvent();
        }
     }
     
