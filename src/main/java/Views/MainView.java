@@ -28,8 +28,13 @@ import javax.swing.border.EmptyBorder;
 */
 
 import Controllers.Controller;
+import Utilities.Playlist;
 import Utilities.Song;
+import java.awt.event.WindowEvent;
+import java.io.File;
 import java.net.MalformedURLException;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class MainView extends javax.swing.JFrame {
     ArrayList<PlaylistTab> listPlaylists = new ArrayList<>();
@@ -38,10 +43,13 @@ public class MainView extends javax.swing.JFrame {
     Controller controller;
     private static MainView mainView;
     Song songToUpload = new Song();
+    Playlist playlistToMake = new Playlist();
     
     public MainView() throws IOException {
         Thread initThread = new Thread(() -> {
             // TODO Add Loading
+            LoadingView loadingView = new LoadingView();
+            loadingView.setVisible(true);
             
             // Initialize Controller
             controller = new Controller();
@@ -59,9 +67,15 @@ public class MainView extends javax.swing.JFrame {
             }
             
             // TODO Exit Loading
+            loadingView.setVisible(false);
             
             // Show Main View
             mainView.setVisible(true);
+            
+            MainPanel.removeAll();
+            MainPanel.add(addPlaylistPanel);
+            MainPanel.repaint();
+            MainPanel.revalidate();
         });
         
         initThread.start();
@@ -213,6 +227,16 @@ public class MainView extends javax.swing.JFrame {
         submitBtn = new javax.swing.JButton();
         cancelBtn = new javax.swing.JButton();
         playingView1 = new Views.PlayingView();
+        addPlaylistPanel = new javax.swing.JPanel();
+        jPanel11 = new javax.swing.JPanel();
+        jPanel12 = new javax.swing.JPanel();
+        song4 = new javax.swing.JLabel();
+        uploadPlaylistImageBtn = new javax.swing.JButton();
+        titleSong4 = new javax.swing.JLabel();
+        inputPlaylistName = new javax.swing.JTextField();
+        titleSong5 = new javax.swing.JLabel();
+        playlistSubmitBtn = new javax.swing.JButton();
+        playlistCancelBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(26, 23, 32));
@@ -367,7 +391,7 @@ public class MainView extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(184, 184, 184));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel2.setText("Date Added");
+        jLabel2.setText("Duration");
         Header.add(jLabel2);
         jLabel2.setBounds(860, 12, 90, 19);
 
@@ -438,6 +462,7 @@ public class MainView extends javax.swing.JFrame {
 
         uploadImagebtn.setBackground(new java.awt.Color(39, 34, 47));
         uploadImagebtn.setBorder(null);
+        uploadImagebtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         uploadImagebtn.setPreferredSize(new java.awt.Dimension(135, 135));
         uploadImagebtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -523,6 +548,7 @@ public class MainView extends javax.swing.JFrame {
         uploadSong.setForeground(new java.awt.Color(203, 157, 223));
         uploadSong.setText("Upload Song");
         uploadSong.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(240, 240, 240)));
+        uploadSong.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         uploadSong.setPreferredSize(new java.awt.Dimension(97, 35));
         uploadSong.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -584,6 +610,7 @@ public class MainView extends javax.swing.JFrame {
         submitBtn.setForeground(new java.awt.Color(240, 240, 240));
         submitBtn.setText("Save");
         submitBtn.setBorder(null);
+        submitBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         submitBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 submitBtnActionPerformed(evt);
@@ -595,6 +622,7 @@ public class MainView extends javax.swing.JFrame {
         cancelBtn.setForeground(new java.awt.Color(226, 115, 150));
         cancelBtn.setText("Cancel");
         cancelBtn.setBorder(null);
+        cancelBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         cancelBtn.setPreferredSize(new java.awt.Dimension(85, 35));
         cancelBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -620,17 +648,181 @@ public class MainView extends javax.swing.JFrame {
         addSongPanelLayout.setVerticalGroup(
             addSongPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(addSongPanelLayout.createSequentialGroup()
-                .addContainerGap(108, Short.MAX_VALUE)
+                .addContainerGap(102, Short.MAX_VALUE)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(addSongPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(submitBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(107, Short.MAX_VALUE))
+                .addContainerGap(101, Short.MAX_VALUE))
         );
 
         MainPanel.add(addSongPanel, "card4");
         MainPanel.add(playingView1, "card4");
+
+        addPlaylistPanel.setBackground(new java.awt.Color(26, 23, 32));
+        addPlaylistPanel.setMaximumSize(new java.awt.Dimension(1100, 600));
+        addPlaylistPanel.setPreferredSize(new java.awt.Dimension(1100, 600));
+
+        jPanel11.setBackground(new java.awt.Color(39, 34, 47));
+
+        jPanel12.setBackground(new java.awt.Color(39, 34, 47));
+        jPanel12.setBorder(BorderFactory.createDashedBorder(Color.BLACK));
+        jPanel12.setPreferredSize(new java.awt.Dimension(288, 288));
+
+        song4.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
+        song4.setForeground(new java.awt.Color(226, 115, 150));
+        song4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        song4.setText("Select an Image to Upload");
+
+        uploadPlaylistImageBtn.setBackground(new java.awt.Color(39, 34, 47));
+        uploadPlaylistImageBtn.setBorder(null);
+        uploadPlaylistImageBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        uploadPlaylistImageBtn.setPreferredSize(new java.awt.Dimension(135, 135));
+        uploadPlaylistImageBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                uploadPlaylistImageBtnActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
+        jPanel12.setLayout(jPanel12Layout);
+        jPanel12Layout.setHorizontalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel12Layout.createSequentialGroup()
+                .addContainerGap(19, Short.MAX_VALUE)
+                .addComponent(song4, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(19, Short.MAX_VALUE))
+            .addGroup(jPanel12Layout.createSequentialGroup()
+                .addGap(83, 83, 83)
+                .addComponent(uploadPlaylistImageBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel12Layout.setVerticalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel12Layout.createSequentialGroup()
+                .addGap(60, 60, 60)
+                .addComponent(uploadPlaylistImageBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(song4)
+                .addContainerGap(75, Short.MAX_VALUE))
+        );
+
+        titleSong4.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
+        titleSong4.setForeground(new java.awt.Color(184, 184, 184));
+        titleSong4.setText("PLAYLIST NAME");
+
+        inputPlaylistName.setBackground(new java.awt.Color(39, 34, 47));
+        inputPlaylistName.setFont(new java.awt.Font("Century Gothic", 1, 15)); // NOI18N
+        inputPlaylistName.setForeground(new java.awt.Color(122, 122, 122));
+        inputPlaylistName.setText("E.g. Nothing but Vibes");
+        inputPlaylistName.setToolTipText("");
+        inputPlaylistName.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(240, 240, 240)));
+        inputPlaylistName.setCaretColor(new java.awt.Color(240, 240, 240));
+        inputPlaylistName.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        inputPlaylistName.setMargin(new java.awt.Insets(5, 6, 2, 6));
+        inputPlaylistName.setSelectedTextColor(new java.awt.Color(240, 240, 240));
+        inputPlaylistName.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                inputPlaylistNameFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                inputPlaylistNameFocusLost(evt);
+            }
+        });
+
+        titleSong5.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
+        titleSong5.setForeground(new java.awt.Color(184, 184, 184));
+        titleSong5.setText("Accepted File Types: .png, .jpg, and .jpeg only");
+
+        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
+        jPanel11.setLayout(jPanel11Layout);
+        jPanel11Layout.setHorizontalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel11Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel11Layout.createSequentialGroup()
+                        .addComponent(titleSong5)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel11Layout.createSequentialGroup()
+                        .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 70, Short.MAX_VALUE)
+                        .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(inputPlaylistName, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(titleSong4, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap())))
+        );
+        jPanel11Layout.setVerticalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel11Layout.createSequentialGroup()
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel11Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel11Layout.createSequentialGroup()
+                        .addGap(120, 120, 120)
+                        .addComponent(titleSong4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(inputPlaylistName, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                .addComponent(titleSong5)
+                .addContainerGap())
+        );
+
+        playlistSubmitBtn.setBackground(new java.awt.Color(226, 115, 150));
+        playlistSubmitBtn.setFont(new java.awt.Font("Century Gothic", 1, 15)); // NOI18N
+        playlistSubmitBtn.setForeground(new java.awt.Color(240, 240, 240));
+        playlistSubmitBtn.setText("Save");
+        playlistSubmitBtn.setBorder(null);
+        playlistSubmitBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        playlistSubmitBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                playlistSubmitBtnActionPerformed(evt);
+            }
+        });
+
+        playlistCancelBtn.setBackground(new java.awt.Color(26, 23, 32));
+        playlistCancelBtn.setFont(new java.awt.Font("Century Gothic", 1, 15)); // NOI18N
+        playlistCancelBtn.setForeground(new java.awt.Color(226, 115, 150));
+        playlistCancelBtn.setText("Cancel");
+        playlistCancelBtn.setBorder(null);
+        playlistCancelBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        playlistCancelBtn.setPreferredSize(new java.awt.Dimension(85, 35));
+        playlistCancelBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                playlistCancelBtnActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout addPlaylistPanelLayout = new javax.swing.GroupLayout(addPlaylistPanel);
+        addPlaylistPanel.setLayout(addPlaylistPanelLayout);
+        addPlaylistPanelLayout.setHorizontalGroup(
+            addPlaylistPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(addPlaylistPanelLayout.createSequentialGroup()
+                .addContainerGap(691, Short.MAX_VALUE)
+                .addComponent(playlistCancelBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(40, 40, 40)
+                .addComponent(playlistSubmitBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(199, Short.MAX_VALUE))
+            .addGroup(addPlaylistPanelLayout.createSequentialGroup()
+                .addGap(200, 200, 200)
+                .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        addPlaylistPanelLayout.setVerticalGroup(
+            addPlaylistPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(addPlaylistPanelLayout.createSequentialGroup()
+                .addContainerGap(102, Short.MAX_VALUE)
+                .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(addPlaylistPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(playlistCancelBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(playlistSubmitBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(101, Short.MAX_VALUE))
+        );
+
+        MainPanel.add(addPlaylistPanel, "card4");
 
         getContentPane().add(MainPanel);
         MainPanel.setBounds(0, 0, 1100, 600);
@@ -695,22 +887,6 @@ public class MainView extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_inputTitleSongFocusLost
 
-    private void inputArtistFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_inputArtistFocusGained
-        // when user clicks on jtextfield to input artist name, mawawala ung placeholder
-        if (inputArtist.getText().equals("E.g. Lola Amour")) {
-            inputArtist.setText("");
-            inputArtist.setForeground(Color.decode("#f0f0f0"));
-        }
-    }//GEN-LAST:event_inputArtistFocusGained
-
-    private void inputArtistFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_inputArtistFocusLost
-        // placeholder for artist comes back if empty ung textfield
-        if (inputArtist.getText().isEmpty()) {
-            inputArtist.setText("E.g. Lola Amour");
-            inputArtist.setForeground(Color.decode("#7A7A7A"));
-        }
-    }//GEN-LAST:event_inputArtistFocusLost
-
     private void submitBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitBtnActionPerformed
         // On Add Song Submit
         String songTitle = inputTitleSong.getText();
@@ -721,14 +897,68 @@ public class MainView extends javax.swing.JFrame {
         controller.uploadSong(songToUpload);
     }//GEN-LAST:event_submitBtnActionPerformed
 
+    private void uploadImagebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadImagebtnActionPerformed
+        songToUpload.setCoverFile();
+    }//GEN-LAST:event_uploadImagebtnActionPerformed
+
     private void uploadSongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadSongActionPerformed
         // Upload Song File
         songToUpload.setAudioFile();
     }//GEN-LAST:event_uploadSongActionPerformed
 
-    private void uploadImagebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadImagebtnActionPerformed
-        songToUpload.setCoverFile();
-    }//GEN-LAST:event_uploadImagebtnActionPerformed
+    private void inputArtistFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_inputArtistFocusLost
+        // placeholder for artist comes back if empty ung textfield
+        if (inputArtist.getText().isEmpty()) {
+            inputArtist.setText("E.g. Lola Amour");
+            inputArtist.setForeground(Color.decode("#7A7A7A"));
+        }
+    }//GEN-LAST:event_inputArtistFocusLost
+
+    private void inputArtistFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_inputArtistFocusGained
+        // when user clicks on jtextfield to input artist name, mawawala ung placeholder
+        if (inputArtist.getText().equals("E.g. Lola Amour")) {
+            inputArtist.setText("");
+            inputArtist.setForeground(Color.decode("#f0f0f0"));
+        }
+    }//GEN-LAST:event_inputArtistFocusGained
+
+    private void uploadPlaylistImageBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadPlaylistImageBtnActionPerformed
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Select Image File");
+
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        FileNameExtensionFilter imgFilter0 = new FileNameExtensionFilter("Image Files", "png", "jpg");
+
+        fileChooser.addChoosableFileFilter(imgFilter0);
+        
+        if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            File imageFile = fileChooser.getSelectedFile();
+            playlistToMake.setImageFile(imageFile);
+        }
+    }//GEN-LAST:event_uploadPlaylistImageBtnActionPerformed
+
+    private void inputPlaylistNameFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_inputPlaylistNameFocusGained
+        // TODO add your handling code here:
+    }//GEN-LAST:event_inputPlaylistNameFocusGained
+
+    private void inputPlaylistNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_inputPlaylistNameFocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_inputPlaylistNameFocusLost
+
+    private void playlistSubmitBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playlistSubmitBtnActionPerformed
+        String playlistName = inputPlaylistName.getText();
+        playlistToMake.setName(playlistName);
+        
+        controller.uploadPlaylist(playlistToMake);
+    }//GEN-LAST:event_playlistSubmitBtnActionPerformed
+
+    private void playlistCancelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playlistCancelBtnActionPerformed
+        // changing from add song to main view card panel (di ko lam bat ang layu nila sa isat isa ditu)
+        MainPanel.removeAll();
+        MainPanel.add(SubPanel1);
+        MainPanel.repaint();
+        MainPanel.revalidate();        
+    }//GEN-LAST:event_playlistCancelBtnActionPerformed
 
     public static void main(String args[]) {
         try {
@@ -755,6 +985,7 @@ public class MainView extends javax.swing.JFrame {
     private javax.swing.JPanel SubPanel1;
     private javax.swing.JPanel SubPanel2;
     private javax.swing.JButton addPlaylist;
+    private javax.swing.JPanel addPlaylistPanel;
     private javax.swing.JPanel addSongPanel;
     private javax.swing.JButton addSongs;
     private javax.swing.JLabel artist;
@@ -763,6 +994,7 @@ public class MainView extends javax.swing.JFrame {
     private javax.swing.JButton cancelBtn;
     private javax.swing.JButton fullScreen;
     private javax.swing.JTextField inputArtist;
+    private javax.swing.JTextField inputPlaylistName;
     private javax.swing.JTextField inputTitleSong;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -772,6 +1004,8 @@ public class MainView extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel11;
+    private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel7;
@@ -779,17 +1013,23 @@ public class MainView extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTextField1;
     private Views.PlayingView playingView1;
+    private javax.swing.JButton playlistCancelBtn;
     private javax.swing.JPanel playlistContainer;
+    private javax.swing.JButton playlistSubmitBtn;
     private javax.swing.JButton seeMore;
     private javax.swing.JLabel song;
     private javax.swing.JLabel song1;
+    private javax.swing.JLabel song4;
     private javax.swing.JPanel songPlay;
     private javax.swing.JPanel songPlay1;
     private javax.swing.JPanel songsContainer;
     private javax.swing.JButton submitBtn;
     private javax.swing.JLabel titleSong;
     private javax.swing.JLabel titleSong1;
+    private javax.swing.JLabel titleSong4;
+    private javax.swing.JLabel titleSong5;
     private javax.swing.JButton uploadImagebtn;
+    private javax.swing.JButton uploadPlaylistImageBtn;
     private javax.swing.JButton uploadSong;
     // End of variables declaration//GEN-END:variables
 }

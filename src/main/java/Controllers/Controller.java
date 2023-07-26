@@ -2,6 +2,7 @@ package Controllers;
 
 import Models.Database;
 import Utilities.PlayerManager;
+import Utilities.Playlist;
 import Utilities.Song;
 
 import javax.swing.JOptionPane;
@@ -122,5 +123,9 @@ public class Controller {
     
     public void updateSong(Song song) {
         db.updateSong(song);
+    }
+    
+    public void uploadPlaylist(Playlist playlist) {
+        db.insertPlaylist(playlist);
     }
 }
