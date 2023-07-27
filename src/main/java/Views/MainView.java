@@ -71,11 +71,6 @@ public class MainView extends javax.swing.JFrame {
             
             // Show Main View
             mainView.setVisible(true);
-            
-            MainPanel.removeAll();
-            MainPanel.add(addPlaylistPanel);
-            MainPanel.repaint();
-            MainPanel.revalidate();
         });
         
         initThread.start();
@@ -141,34 +136,16 @@ public class MainView extends javax.swing.JFrame {
     
      private void createPlaylistPanel() throws IOException {
          // insert first 5 playlists only to preview
-         
-         //dummy playlists to insert in an array
-         String playlistName;
-         URL playlistImage;
-         
-         playlistName = "cottage core charot";
-         playlistImage = new URL("https://i.pinimg.com/564x/95/2b/ba/952bba9702d94b8715e4210c9e194dab.jpg");
-         listPlaylists.add(new PlaylistTab(playlistName, playlistImage));
-         
-         playlistName = "be gay do witchcraft";
-         playlistImage = new URL("https://i.pinimg.com/564x/ac/2e/1e/ac2e1e63e59309c0e2af1e2bc6cb7671.jpg");
-         listPlaylists.add(new PlaylistTab(playlistName, playlistImage));
-         
-         playlistName = "i dont need sleep i need answers";
-         playlistImage = new URL("https://i.pinimg.com/564x/68/55/20/6855204585282534fa03069707269e75.jpg");
-         listPlaylists.add(new PlaylistTab(playlistName, playlistImage));
-         
-         playlistName = "it is time to be unhinged";
-         playlistImage = new URL("https://i.pinimg.com/564x/3e/d0/45/3ed0457f604d53b779971d05703205fa.jpg");
-         listPlaylists.add(new PlaylistTab(playlistName, playlistImage));
-         
-         playlistImage = new URL("https://i.pinimg.com/564x/64/c4/6e/64c46ecd2d2e3a50761b8ed93c8351ae.jpg");
-         playlistName = "emo era";
-         listPlaylists.add(new PlaylistTab(playlistName, playlistImage));
+         int limit = 5;
          
          //display playlists
+         int index = 0;
          for(PlaylistTab playlist : listPlaylists) {
             playlistContainer.add(playlist);
+            index++;
+            
+            if (index >= limit)
+                break;
         }
      }
      

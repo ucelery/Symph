@@ -167,6 +167,28 @@ public class Database {
         });
     }
     
+    public Future<ArrayList<Playlist>> getPlaylistData() {
+        ArrayList<Playlist> resSongs = new ArrayList();
+        
+        return executor.submit(() -> {
+            // Retrieve Data
+            MongoCollection<Document> col = database.getCollection("songs");
+            MongoCursor<Document> cursor = col.find().iterator();
+
+            while (cursor.hasNext()) {
+                Document doc = cursor.next();
+                Playlist playlist = new Playlist();
+                playlist.setId(doc.getObjectId("_id"));
+                playlist.setName(doc.getString("name"));
+                playlist.setImageURL(doc.getString("imageURL"));
+                
+                resSongs.add(playlist);
+            }
+            
+            return resSongs;
+        });
+    }
+        
     public void updateSong(Song song) {
         new Thread(() -> {
             MongoCollection<Document> col = database.getCollection("songs");
