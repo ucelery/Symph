@@ -36,7 +36,7 @@ public class Songs extends javax.swing.JPanel {
         artist.setText(song.getArtist());
         date.setText(song.getFormattedDuration());
         
-        Image image = ImageIO.read(song.getCoverFile());
+        Image image = ImageIO.read(new URL(song.getImageURL()));
         ImageIcon playlistImage = new ImageIcon(image);
         int labelWidth = songPic.getWidth();
         Image scaledImage = playlistImage.getImage().getScaledInstance(labelWidth, -1, Image.SCALE_SMOOTH);

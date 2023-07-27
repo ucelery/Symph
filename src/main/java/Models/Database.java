@@ -1,6 +1,7 @@
 package Models;
 
 // General Database
+import Utilities.Playlist;
 import Utilities.Song;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -98,9 +99,40 @@ public class Database {
                 collection.insertOne(doc);
                 
                 song.setAudioURL(audioRes.get("secure_url").toString());
-                song.setImageURL(audioRes.get("secure_url").toString());
+                song.setImageURL(imageRes.get("secure_url").toString());
                 
                 future.complete(song);
+            } catch (Exception e) {
+                e.printStackTrace();
+                future.completeExceptionally(e);
+            }
+        }).start();
+        
+        return future;
+    }
+    
+    public CompletableFuture<Playlist> insertPlaylist(Playlist playlist) {
+        CompletableFuture<Playlist> future = new CompletableFuture<Playlist>();
+        File coverFile = playlist.getImageFile();
+        
+        // Upload the song and image cover
+        new Thread(() -> {
+            try {
+                Map<?, ?> imageRes = cloudinary.uploader().upload(coverFile, ObjectUtils.asMap(
+                    "use_filename", true,
+                    "unique_filename", false,
+                    "overwrite", true
+                ));
+                
+                // Upload details to mongo
+                MongoCollection<Document> collection = database.getCollection("playlists");
+                Document doc = new Document("name", playlist.getName())
+                        .append("imageURL", imageRes.get("secure_url").toString());
+                collection.insertOne(doc);
+                
+                playlist.setImageURL(imageRes.get("secure_url").toString());
+                
+                future.complete(playlist);
             } catch (Exception e) {
                 e.printStackTrace();
                 future.completeExceptionally(e);
@@ -135,6 +167,28 @@ public class Database {
         });
     }
     
+    public Future<ArrayList<Playlist>> getPlaylistData() {
+        ArrayList<Playlist> resSongs = new ArrayList();
+        
+        return executor.submit(() -> {
+            // Retrieve Data
+            MongoCollection<Document> col = database.getCollection("songs");
+            MongoCursor<Document> cursor = col.find().iterator();
+
+            while (cursor.hasNext()) {
+                Document doc = cursor.next();
+                Playlist playlist = new Playlist();
+                playlist.setId(doc.getObjectId("_id"));
+                playlist.setName(doc.getString("name"));
+                playlist.setImageURL(doc.getString("imageURL"));
+                
+                resSongs.add(playlist);
+            }
+            
+            return resSongs;
+        });
+    }
+        
     public void updateSong(Song song) {
         new Thread(() -> {
             MongoCollection<Document> col = database.getCollection("songs");

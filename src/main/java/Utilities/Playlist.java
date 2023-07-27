@@ -6,6 +6,8 @@ package Utilities;
 
 import java.io.File;
 import java.util.ArrayList;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import org.bson.types.ObjectId;
 
 /**
@@ -19,6 +21,10 @@ public class Playlist {
     private String imageURL;
     private ArrayList<Song> songs;
     private boolean favorite = false;
+    
+    public Playlist() {
+        
+    }
     
     public Playlist(String name) {
         this.name = name;
