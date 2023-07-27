@@ -46,21 +46,31 @@ public class MainView extends javax.swing.JFrame {
     Playlist playlistToMake = new Playlist();
     
     public MainView() throws IOException {
+        int maxProcesses = 6;
+        
         Thread initThread = new Thread(() -> {
             // TODO Add Loading
             LoadingView loadingView = new LoadingView();
+            loadingView.setMaxLoadingBar(maxProcesses);
             loadingView.setVisible(true);
+            
+            loadingView.incrementLoadingBar();
             
             // Initialize Controller
             controller = new Controller();
+            loadingView.incrementLoadingBar();
             
             // Initialize Components
             initComponents();
+            loadingView.incrementLoadingBar();
             
             // Initialize Views
             try {
                 playingView1.setController(controller);
+                loadingView.incrementLoadingBar();
+                
                 controller.getPlayerManager().addListener(playingView1);
+                loadingView.incrementLoadingBar();
                 initSongComponents();
             } catch (IOException ex) {
                 Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, ex);
@@ -68,6 +78,7 @@ public class MainView extends javax.swing.JFrame {
             
             // TODO Exit Loading
             loadingView.setVisible(false);
+            loadingView.incrementLoadingBar();
             
             // Show Main View
             mainView.setVisible(true);

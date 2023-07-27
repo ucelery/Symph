@@ -14,14 +14,29 @@ import javax.swing.JFrame;
  * @author atond
  */
 public class LoadingView extends javax.swing.JFrame {
-
+    int max = 0;
     /**
      * Creates new form LoadingView
      */
     public LoadingView() {
         initComponents();
     }
-
+    
+    public void setMaxLoadingBar(int max) {
+        this.max = max;
+        jProgressBar1.setMinimum(0);
+        jProgressBar1.setMaximum(max);
+    }
+    
+    public void incrementLoadingBar() {
+        int currValue = jProgressBar1.getValue();
+        currValue++;
+        
+        if (currValue >= max) return;
+        
+        jProgressBar1.setValue(currValue);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
