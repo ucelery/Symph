@@ -1,6 +1,7 @@
 package Controllers;
 
 import Models.Database;
+import Utilities.MusicPlayer.SongComponentListener;
 import Utilities.PlayerManager;
 import Utilities.Playlist;
 import Utilities.Song;
@@ -16,11 +17,17 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Controller {
+public class Controller implements SongComponentListener {
+    public static Controller Instance;
     Database db = new Database();
     PlayerManager playerManager;
 
     public Controller() {
+        if (Instance == null) {
+            Instance = this;
+        } else return;
+        
+        
         initializeApp();
     }
     
@@ -127,5 +134,20 @@ public class Controller {
     
     public void uploadPlaylist(Playlist playlist) {
         db.insertPlaylist(playlist);
+    }
+
+    @Override
+    public void onSongPlay(Song song) {
+        playerManager.forcePlaySong(song);
+    }
+
+    @Override
+    public void onSongRemove(Song song) {
+        
+    }
+
+    @Override
+    public void onSongAddQueue(Song song) {
+        playerManager.enqueueSong(song);
     }
 }

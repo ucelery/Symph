@@ -4,11 +4,14 @@
  */
 package Views;
 
+import Controllers.Controller;
+import Utilities.MusicPlayer.SongComponentListener;
 import Utilities.Song;
 import java.awt.Image;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -19,13 +22,17 @@ import javax.swing.ImageIcon;
  * @author CailynRae
  */
 public class Songs extends javax.swing.JPanel {
+    private Song song;
     private int index;
     private ImageIcon playIcon;
+    private ArrayList<SongComponentListener> songComponentListeners = new ArrayList();
+    
     /**
      * Creates new form Songs
      */
     public Songs(String i, Song song) throws IOException {
         initComponents();
+        this.song = song;
         this.index = Integer.parseInt(i);
         
         // Cache icon
@@ -46,6 +53,9 @@ public class Songs extends javax.swing.JPanel {
         
         addToQueueBtn.setIcon(putIcon(new URL("https://i.imgur.com/OE3vVd4.png"), 22));
         addToQueueBtn.setVisible(false);
+        
+        // Add The App Controller As a Listener\
+        songComponentListeners.add(Controller.Instance);
     }
     
     private ImageIcon putIcon(URL imageURL, int width) throws IOException{
@@ -99,6 +109,11 @@ public class Songs extends javax.swing.JPanel {
         indexLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         indexLabel.setText("#");
         indexLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        indexLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                indexLabelMousePressed(evt);
+            }
+        });
         add(indexLabel);
         indexLabel.setBounds(10, 20, 38, 19);
 
@@ -132,6 +147,11 @@ public class Songs extends javax.swing.JPanel {
         addToQueueBtn.setFont(new java.awt.Font("Century Gothic", 1, 24)); // NOI18N
         addToQueueBtn.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         addToQueueBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        addToQueueBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                addToQueueBtnMousePressed(evt);
+            }
+        });
         add(addToQueueBtn);
         addToQueueBtn.setBounds(1020, 20, 20, 20);
     }// </editor-fold>//GEN-END:initComponents
@@ -147,6 +167,18 @@ public class Songs extends javax.swing.JPanel {
         addToQueueBtn.setVisible(false);
         indexLabel.setIcon(null);
     }//GEN-LAST:event_formMouseExited
+
+    private void addToQueueBtnMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addToQueueBtnMousePressed
+        for (SongComponentListener ls : songComponentListeners) {
+            ls.onSongAddQueue(song);
+        }
+    }//GEN-LAST:event_addToQueueBtnMousePressed
+
+    private void indexLabelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_indexLabelMousePressed
+        for (SongComponentListener ls : songComponentListeners) {
+            ls.onSongPlay(song);
+        }
+    }//GEN-LAST:event_indexLabelMousePressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

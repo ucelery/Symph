@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -43,7 +44,7 @@ public class PlayerManager {
         }
         
         new JFXPanel(); // Initialize Toolkit for music playing DO NOT REMOVE
-        musicQueue = new LinkedList<Song>(songs);
+        musicQueue = new LinkedList<Song>();
         
         this.songBank = songs;
         System.out.println("[ MUSIC.PLAYER ] Player initialized with " + songs.size() + " songs");
@@ -89,6 +90,8 @@ public class PlayerManager {
         
         musicQueue.offer(song);
         invokeQueueUpdateEvent();
+        
+        System.out.println("[ MUSIC.PLAYER ] Added " + song.getTitle() + " by " + song.getArtist());
     }
     
     public void enqueuePlaylist(Playlist playlist) {
@@ -140,6 +143,21 @@ public class PlayerManager {
                 invokeSongPlayingEvent((int) newDuration.toSeconds());
             });
         }).start();
+    }
+    
+    public void forcePlaySong(Song song) {
+        Deque<Song> deque = new LinkedList(musicQueue);
+        
+        // Put the previously playing song at the front if there is one playing
+        if (state == PlayerState.PLAYING) {
+            stop();
+            deque.offerFirst(currentSong);
+        }
+        
+        // And then add the forced play song to the queue
+        deque.offerFirst(song);
+        musicQueue = new LinkedList(deque);
+        play();
     }
     
     public void playNextSong() {
