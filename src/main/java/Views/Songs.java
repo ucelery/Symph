@@ -93,6 +93,8 @@ public class Songs extends javax.swing.JPanel {
         addToQueueBtn = new javax.swing.JLabel();
 
         setBackground(null);
+        setMaximumSize(new java.awt.Dimension(1060, 60));
+        setMinimumSize(new java.awt.Dimension(1060, 60));
         setPreferredSize(new java.awt.Dimension(1060, 60));
         addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -115,34 +117,34 @@ public class Songs extends javax.swing.JPanel {
             }
         });
         add(indexLabel);
-        indexLabel.setBounds(10, 20, 38, 19);
+        indexLabel.setBounds(0, 20, 38, 19);
 
         songPic.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
         songPic.setForeground(new java.awt.Color(184, 184, 184));
         songPic.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         add(songPic);
-        songPic.setBounds(80, 10, 40, 40);
+        songPic.setBounds(70, 10, 40, 40);
 
         songTitle.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
         songTitle.setForeground(new java.awt.Color(240, 240, 240));
         songTitle.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         songTitle.setText("Title");
         add(songTitle);
-        songTitle.setBounds(140, 20, 310, 19);
+        songTitle.setBounds(130, 20, 310, 19);
 
         artist.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
         artist.setForeground(new java.awt.Color(240, 240, 240));
         artist.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         artist.setText("Artist");
         add(artist);
-        artist.setBounds(510, 20, 300, 19);
+        artist.setBounds(500, 20, 300, 19);
 
         date.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
         date.setForeground(new java.awt.Color(240, 240, 240));
         date.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         date.setText("Date Added");
         add(date);
-        date.setBounds(790, 20, 190, 19);
+        date.setBounds(788, 20, 190, 19);
 
         addToQueueBtn.setFont(new java.awt.Font("Century Gothic", 1, 24)); // NOI18N
         addToQueueBtn.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -157,8 +159,12 @@ public class Songs extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseEntered
+        ImageIcon imageIcon;
         indexLabel.setText("");
-        indexLabel.setIcon(playIcon);
+        Image scaledImage = playIcon.getImage().getScaledInstance(10, -1, Image.SCALE_SMOOTH);
+        // ayan na sha    
+        imageIcon = new ImageIcon(scaledImage);
+        indexLabel.setIcon(imageIcon);
         addToQueueBtn.setVisible(true);
     }//GEN-LAST:event_formMouseEntered
 

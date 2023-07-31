@@ -10,6 +10,7 @@ import Utilities.PlayerManager;
 import Utilities.Song;
 import Views.Components.SongRow;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Image;
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,6 +24,7 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -33,6 +35,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class PlayingView extends javax.swing.JPanel implements MusicPlayerListener {    
     private Controller controller;
     private Song currentSong;
+    int flagFav, flagAdd;
     /**
      * Creates new form PlayingView
      */
@@ -42,6 +45,8 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
         // Create the CardLayout for the mainPanel
         CardLayout cardLayout = new CardLayout();
         mainPanel.setLayout(cardLayout);
+        flagFav = 0;
+        flagAdd = 0;
         
         // Add the playingPanel and queuePanel to the mainPanel
         mainPanel.add(playingPanel, "playingPanel");
@@ -130,12 +135,15 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
         jScrollPane1 = new javax.swing.JScrollPane();
         lyricsInput = new javax.swing.JTextArea();
         lyricsLabel = new javax.swing.JLabel();
-        submitLyricsButton = new javax.swing.JLabel();
+        lyricsCancelBtn = new javax.swing.JButton();
+        submitLyricsButton = new javax.swing.JButton();
         lyricsPanel = new javax.swing.JPanel();
         lyricsScroll = new javax.swing.JScrollPane();
         lyricsArea = new javax.swing.JTextArea();
-        jLabel1 = new javax.swing.JLabel();
+        addLyricsBtn = new javax.swing.JLabel();
         lyricsLabel1 = new javax.swing.JLabel();
+
+        setPreferredSize(new java.awt.Dimension(1115, 576));
 
         mainPanel.setBackground(new java.awt.Color(26, 23, 32));
         mainPanel.setLayout(new java.awt.CardLayout());
@@ -145,9 +153,11 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
 
         progressSlider.setBackground(new java.awt.Color(40, 40, 57));
         progressSlider.setForeground(new java.awt.Color(226, 115, 150));
+        progressSlider.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         backButton.setFont(new java.awt.Font("Century Gothic", 1, 36)); // NOI18N
         backButton.setForeground(new java.awt.Color(226, 115, 150));
+        backButton.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         backButton.setText("«");
         backButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
@@ -156,7 +166,7 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
         forwardButton.setText("»");
         forwardButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        titleLabel.setFont(new java.awt.Font("Century Gothic", 0, 36)); // NOI18N
+        titleLabel.setFont(new java.awt.Font("Century Gothic", 1, 36)); // NOI18N
         titleLabel.setForeground(new java.awt.Color(240, 240, 240));
         titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         titleLabel.setText("Song Title");
@@ -178,15 +188,31 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        plusLabel.setFont(new java.awt.Font("Century Gothic", 0, 24)); // NOI18N
+        plusLabel.setFont(new java.awt.Font("Century Gothic", 0, 31)); // NOI18N
         plusLabel.setForeground(new java.awt.Color(115, 129, 137));
+        plusLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         plusLabel.setText("+");
+        plusLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        plusLabel.setAlignmentY(0.0F);
         plusLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        plusLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                plusLabelMouseClicked(evt);
+            }
+        });
 
-        favButton.setFont(new java.awt.Font("Century Gothic", 0, 24)); // NOI18N
+        favButton.setFont(new java.awt.Font("Century Gothic", 0, 30)); // NOI18N
         favButton.setForeground(new java.awt.Color(115, 129, 137));
+        favButton.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         favButton.setText("♥");
+        favButton.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        favButton.setAlignmentY(0.0F);
         favButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        favButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                favButtonMouseClicked(evt);
+            }
+        });
 
         artistLabel.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
         artistLabel.setForeground(new java.awt.Color(240, 240, 240));
@@ -202,9 +228,12 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
 
         playButton.setFont(new java.awt.Font("Century Gothic", 1, 32)); // NOI18N
         playButton.setForeground(new java.awt.Color(226, 115, 150));
+        playButton.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         playButton.setText("►");
+        playButton.setToolTipText("");
         playButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         playButton.setMaximumSize(new java.awt.Dimension(566, 512));
+        playButton.setPreferredSize(new java.awt.Dimension(40, 40));
         playButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 playButtonMousePressed(evt);
@@ -213,6 +242,7 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
 
         leaveButton.setFont(new java.awt.Font("Century Gothic", 0, 32)); // NOI18N
         leaveButton.setForeground(new java.awt.Color(115, 126, 137));
+        leaveButton.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         leaveButton.setText("<");
         leaveButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
@@ -236,41 +266,36 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
             playingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(playingPanelLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addComponent(leaveButton)
+                .addComponent(leaveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(coverPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(112, 112, 112))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, playingPanelLayout.createSequentialGroup()
-                .addContainerGap(85, Short.MAX_VALUE)
+                .addContainerGap(57, Short.MAX_VALUE)
                 .addGroup(playingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(progressSlider, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(titleLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 385, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(playingPanelLayout.createSequentialGroup()
                         .addGap(6, 6, 6)
-                        .addGroup(playingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(playingPanelLayout.createSequentialGroup()
-                                .addComponent(startLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(endLabel))
-                            .addGroup(playingPanelLayout.createSequentialGroup()
-                                .addComponent(plusLabel)
-                                .addGap(140, 140, 140)
-                                .addComponent(artistLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(favButton))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, playingPanelLayout.createSequentialGroup()
+                        .addGroup(playingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(startLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(plusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(118, 118, 118)
+                        .addComponent(artistLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(playingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(favButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(endLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(playingPanelLayout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addComponent(backButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(144, 144, 144)
                         .addComponent(playButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(forwardButton)
-                        .addGap(2, 2, 2)))
+                        .addGroup(playingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(forwardButton)
+                            .addComponent(queueButton))))
                 .addGap(58, 58, 58))
-            .addGroup(playingPanelLayout.createSequentialGroup()
-                .addGap(423, 423, 423)
-                .addComponent(queueButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         playingPanelLayout.setVerticalGroup(
             playingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -284,23 +309,22 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
                         .addComponent(leaveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(titleLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(playingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(plusLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(playingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(artistLabel)
                     .addComponent(favButton)
-                    .addComponent(artistLabel))
-                .addGap(33, 33, 33)
+                    .addComponent(plusLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addGroup(playingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(startLabel)
                     .addComponent(endLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(progressSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(playingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(forwardButton, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(playingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(playButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(backButton)))
+                .addGroup(playingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(playButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(forwardButton, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(queueButton)
                 .addGap(44, 44, 44))
@@ -313,6 +337,7 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
 
         returnButton.setFont(new java.awt.Font("Century Gothic", 0, 32)); // NOI18N
         returnButton.setForeground(new java.awt.Color(115, 126, 137));
+        returnButton.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         returnButton.setText("<");
         returnButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         returnButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -328,12 +353,16 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
         queueScroll.setBackground(new java.awt.Color(26, 23, 32));
         queueScroll.setBorder(null);
         queueScroll.setForeground(new java.awt.Color(26, 23, 32));
+        queueScroll.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        queueScroll.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         queueScroll.setMaximumSize(new java.awt.Dimension(252, 370));
         queueScroll.setPreferredSize(new java.awt.Dimension(437, 59));
         queueScroll.setViewportView(null);
         queueScroll.getViewport().setOpaque(false);
 
-        queueContainer.setLayout(new javax.swing.BoxLayout(queueContainer, javax.swing.BoxLayout.LINE_AXIS));
+        queueContainer.setBackground(new java.awt.Color(26, 23, 32));
+        queueContainer.setAlignmentY(0.0F);
+        queueContainer.setLayout(new javax.swing.BoxLayout(queueContainer, javax.swing.BoxLayout.Y_AXIS));
         queueScroll.setViewportView(queueContainer);
 
         jLabel3.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
@@ -352,9 +381,9 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
                         .addGroup(queuePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel3)
                             .addComponent(jLabel2)
-                            .addComponent(songRow1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(queueScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 467, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(returnButton))
+                            .addComponent(songRow1, javax.swing.GroupLayout.DEFAULT_SIZE, 467, Short.MAX_VALUE)
+                            .addComponent(queueScroll, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(returnButton, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(31, Short.MAX_VALUE))
         );
         queuePanelLayout.setVerticalGroup(
@@ -369,7 +398,7 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(queueScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 342, Short.MAX_VALUE)
+                .addComponent(queueScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 354, Short.MAX_VALUE)
                 .addGap(18, 18, 18))
         );
 
@@ -377,21 +406,43 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
 
         addLyricsView.setBackground(new java.awt.Color(26, 23, 32));
 
+        jScrollPane1.setBorder(null);
+
+        lyricsInput.setBackground(new java.awt.Color(39, 34, 47));
         lyricsInput.setColumns(20);
+        lyricsInput.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        lyricsInput.setForeground(new java.awt.Color(240, 240, 240));
         lyricsInput.setRows(5);
+        lyricsInput.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(240, 240, 240)));
+        lyricsInput.setCaretColor(new java.awt.Color(240, 240, 240));
         jScrollPane1.setViewportView(lyricsInput);
 
         lyricsLabel.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
         lyricsLabel.setForeground(new java.awt.Color(240, 240, 240));
         lyricsLabel.setText("Paste the lyrics and hit submit!");
 
-        submitLyricsButton.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
+        lyricsCancelBtn.setBackground(new java.awt.Color(26, 23, 32));
+        lyricsCancelBtn.setFont(new java.awt.Font("Century Gothic", 1, 15)); // NOI18N
+        lyricsCancelBtn.setForeground(new java.awt.Color(226, 115, 150));
+        lyricsCancelBtn.setText("Cancel");
+        lyricsCancelBtn.setBorder(null);
+        lyricsCancelBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lyricsCancelBtn.setPreferredSize(new java.awt.Dimension(85, 35));
+        lyricsCancelBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                lyricsCancelBtnActionPerformed(evt);
+            }
+        });
+
+        submitLyricsButton.setBackground(new java.awt.Color(226, 115, 150));
+        submitLyricsButton.setFont(new java.awt.Font("Century Gothic", 1, 15)); // NOI18N
         submitLyricsButton.setForeground(new java.awt.Color(240, 240, 240));
-        submitLyricsButton.setText("submit");
+        submitLyricsButton.setText("Submit");
+        submitLyricsButton.setBorder(null);
         submitLyricsButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        submitLyricsButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                submitLyricsButtonMousePressed(evt);
+        submitLyricsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                submitLyricsButtonActionPerformed(evt);
             }
         });
 
@@ -405,10 +456,12 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
                     .addComponent(jScrollPane1)
                     .addGroup(addLyricsViewLayout.createSequentialGroup()
                         .addComponent(lyricsLabel)
-                        .addGap(0, 242, Short.MAX_VALUE))
+                        .addGap(0, 244, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, addLyricsViewLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(submitLyricsButton)))
+                        .addComponent(lyricsCancelBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(40, 40, 40)
+                        .addComponent(submitLyricsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         addLyricsViewLayout.setVerticalGroup(
@@ -418,15 +471,18 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
                 .addComponent(lyricsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(submitLyricsButton)
-                .addContainerGap(215, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(addLyricsViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lyricsCancelBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(submitLyricsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(191, Short.MAX_VALUE))
         );
 
         mainPanel.add(addLyricsView, "addLyrics");
 
         lyricsPanel.setBackground(new java.awt.Color(26, 23, 32));
         lyricsPanel.setPreferredSize(new java.awt.Dimension(600, 600));
+        lyricsPanel.setLayout(null);
 
         lyricsScroll.setBackground(new java.awt.Color(26, 32, 32));
         lyricsScroll.setBorder(null);
@@ -446,50 +502,33 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
         lyricsArea.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         lyricsScroll.setViewportView(lyricsArea);
 
-        jLabel1.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(240, 240, 240));
-        jLabel1.setText("Add Lyrics");
-        jLabel1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+        lyricsPanel.add(lyricsScroll);
+        lyricsScroll.setBounds(0, 69, 540, 501);
+
+        addLyricsBtn.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
+        addLyricsBtn.setForeground(new java.awt.Color(184, 184, 184));
+        addLyricsBtn.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        addLyricsBtn.setText("Add Lyrics");
+        addLyricsBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        addLyricsBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                addLyricsBtnMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                addLyricsBtnMouseExited(evt);
+            }
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                jLabel1MousePressed(evt);
+                addLyricsBtnMousePressed(evt);
             }
         });
+        lyricsPanel.add(addLyricsBtn);
+        addLyricsBtn.setBounds(450, 30, 90, 19);
 
-        lyricsLabel1.setFont(new java.awt.Font("Century Gothic", 0, 36)); // NOI18N
+        lyricsLabel1.setFont(new java.awt.Font("Century Gothic", 1, 36)); // NOI18N
         lyricsLabel1.setForeground(new java.awt.Color(240, 240, 240));
         lyricsLabel1.setText("Lyrics");
-
-        javax.swing.GroupLayout lyricsPanelLayout = new javax.swing.GroupLayout(lyricsPanel);
-        lyricsPanel.setLayout(lyricsPanelLayout);
-        lyricsPanelLayout.setHorizontalGroup(
-            lyricsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(lyricsPanelLayout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addGroup(lyricsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(lyricsPanelLayout.createSequentialGroup()
-                        .addComponent(lyricsScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 451, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addGroup(lyricsPanelLayout.createSequentialGroup()
-                        .addComponent(lyricsLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel1)
-                        .addGap(28, 28, 28))))
-        );
-        lyricsPanelLayout.setVerticalGroup(
-            lyricsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(lyricsPanelLayout.createSequentialGroup()
-                .addContainerGap(14, Short.MAX_VALUE)
-                .addGroup(lyricsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, lyricsPanelLayout.createSequentialGroup()
-                        .addComponent(lyricsLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, lyricsPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(18, 18, 18)))
-                .addComponent(lyricsScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 501, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
+        lyricsPanel.add(lyricsLabel1);
+        lyricsLabel1.setBounds(0, 20, 97, 37);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -498,7 +537,7 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
             .addGroup(layout.createSequentialGroup()
                 .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 528, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(lyricsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE))
+                .addComponent(lyricsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 587, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -518,9 +557,10 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
     private void returnButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_returnButtonMouseClicked
         // TODO add your handling code here:
         // Switch to the playingPanel
-        CardLayout cardLayout = (CardLayout) mainPanel.getLayout();
-        cardLayout.show(mainPanel, null);
-        cardLayout.show(mainPanel, "playingPanel");
+        mainPanel.removeAll();
+        mainPanel.add(playingPanel);
+        mainPanel.repaint();
+        mainPanel.revalidate();
     }//GEN-LAST:event_returnButtonMouseClicked
 
     private void playButtonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playButtonMousePressed
@@ -538,17 +578,27 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
     }//GEN-LAST:event_playButtonMousePressed
 
     private void queueButtonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_queueButtonMousePressed
-        CardLayout cardLayout = (CardLayout) mainPanel.getLayout();
-        cardLayout.show(mainPanel, null);
-        cardLayout.show(mainPanel, "queuePanel");
+        mainPanel.removeAll();
+        mainPanel.add(queuePanel);
+        mainPanel.repaint();
+        mainPanel.revalidate();
     }//GEN-LAST:event_queueButtonMousePressed
 
-    private void jLabel1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MousePressed
-        CardLayout cardLayout = (CardLayout) mainPanel.getLayout();
-        cardLayout.show(mainPanel, "addLyrics");
-    }//GEN-LAST:event_jLabel1MousePressed
+    private void addLyricsBtnMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addLyricsBtnMousePressed
+        mainPanel.removeAll();
+        mainPanel.add(addLyricsView);
+        mainPanel.repaint();
+        mainPanel.revalidate();
+    }//GEN-LAST:event_addLyricsBtnMousePressed
 
-    private void submitLyricsButtonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_submitLyricsButtonMousePressed
+    private void lyricsCancelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lyricsCancelBtnActionPerformed
+        mainPanel.removeAll();
+        mainPanel.add(playingPanel);
+        mainPanel.repaint();
+        mainPanel.revalidate();
+    }//GEN-LAST:event_lyricsCancelBtnActionPerformed
+
+    private void submitLyricsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitLyricsButtonActionPerformed
         String lyricsInputStr = lyricsInput.getText();
         if (lyricsInputStr.isBlank()) {
             JOptionPane.showMessageDialog(null, "Please Populate Lyrics Text Field");
@@ -560,10 +610,47 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
         newSong = currentSong;
         newSong.setLyrics(lyricsInputStr);
         controller.updateSong(newSong);
-    }//GEN-LAST:event_submitLyricsButtonMousePressed
+    }//GEN-LAST:event_submitLyricsButtonActionPerformed
+
+    private void plusLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_plusLabelMouseClicked
+        // TODO add your handling code here:
+        if(flagAdd == 0){
+            plusLabel.setForeground(Color.decode("#B07FC3"));
+            flagAdd = 1;
+        }
+        
+        else if (flagAdd == 1){
+           plusLabel.setForeground(Color.decode("#738189"));
+           flagAdd = 0; 
+        }
+    }//GEN-LAST:event_plusLabelMouseClicked
+
+    private void favButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_favButtonMouseClicked
+        // TODO add your handling code here:
+        if(flagFav == 0) {
+           favButton.setForeground(Color.decode("#B07FC3"));
+           flagFav = 1;
+        }
+        
+        else if (flagFav == 1){
+           favButton.setForeground(Color.decode("#738189"));
+           flagFav = 0; 
+        }
+    }//GEN-LAST:event_favButtonMouseClicked
+
+    private void addLyricsBtnMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addLyricsBtnMouseEntered
+        // TODO add your handling code here:
+        addLyricsBtn.setText("<html><u>Add Lyrics</u></html>");
+    }//GEN-LAST:event_addLyricsBtnMouseEntered
+
+    private void addLyricsBtnMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addLyricsBtnMouseExited
+        // TODO add your handling code here:
+        addLyricsBtn.setText("Add Lyrics");
+    }//GEN-LAST:event_addLyricsBtnMouseExited
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel addLyricsBtn;
     private javax.swing.JPanel addLyricsView;
     private javax.swing.JLabel artistLabel;
     private javax.swing.JLabel backButton;
@@ -572,12 +659,12 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
     private javax.swing.JLabel endLabel;
     private javax.swing.JLabel favButton;
     private javax.swing.JLabel forwardButton;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel leaveButton;
+    public javax.swing.JLabel leaveButton;
     private javax.swing.JTextArea lyricsArea;
+    private javax.swing.JButton lyricsCancelBtn;
     private javax.swing.JTextArea lyricsInput;
     private javax.swing.JLabel lyricsLabel;
     private javax.swing.JLabel lyricsLabel1;
@@ -595,7 +682,7 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
     private javax.swing.JLabel returnButton;
     private Views.Components.SongRow songRow1;
     private javax.swing.JLabel startLabel;
-    private javax.swing.JLabel submitLyricsButton;
+    private javax.swing.JButton submitLyricsButton;
     private javax.swing.JLabel titleLabel;
     // End of variables declaration//GEN-END:variables
 
@@ -630,10 +717,13 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
     public void onQueueUpdate(Queue<Song> songs) {
         queueContainer.removeAll();
         for (Song song : songs) {
+            System.out.println(song.getTitle());
             try {
                 SongRow row = new SongRow();
                 row.updateSongPanel(song);
                 queueContainer.add(row);
+                queueContainer.repaint();
+                queueContainer.revalidate();
             } catch (IOException ex) {
                 Logger.getLogger(PlayingView.class.getName()).log(Level.SEVERE, null, ex);
             }
