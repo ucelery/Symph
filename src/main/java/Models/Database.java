@@ -14,6 +14,8 @@ import com.cloudinary.*;
 import com.cloudinary.utils.ObjectUtils;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.InsertOneResult;
 
 import io.github.cdimascio.dotenv.Dotenv;
@@ -25,9 +27,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
+
+import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.set;
 
 public class Database {    
     MongoClient mongoClient;
@@ -153,6 +159,8 @@ public class Database {
             while (cursor.hasNext()) {
                 Document doc = cursor.next();
                 Song song = new Song();
+                
+                song.setID(doc.getObjectId("_id"));
                 song.setPlaylistIDs(doc.getList("playlists", ObjectId.class));
                 song.setArtist(doc.getString("artist"));
                 song.setTitle(doc.getString("title"));
@@ -193,8 +201,10 @@ public class Database {
         new Thread(() -> {
             MongoCollection<Document> col = database.getCollection("songs");
             
-            Document filter = new Document("_id", song.getID());
-            Document update = new Document("$set", new Document("playlists", song.getPlaylistIDs()));
+            System.out.println(song.getID());
+            
+            col.updateOne(Filters.eq("_id", song.getID()),
+                    Updates.set("lyrics", song.getLyrics()));
         }).start();
     }
 }

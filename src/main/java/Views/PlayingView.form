@@ -396,7 +396,7 @@
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="songRow1" alignment="0" pref="467" max="32767" attributes="0"/>
+                                  <Component id="songRow1" alignment="0" max="32767" attributes="0"/>
                                   <Component id="queueScroll" alignment="0" max="32767" attributes="0"/>
                               </Group>
                           </Group>

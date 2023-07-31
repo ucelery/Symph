@@ -610,6 +610,8 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
         newSong = currentSong;
         newSong.setLyrics(lyricsInputStr);
         controller.updateSong(newSong);
+        
+        System.out.println("[ APP ] Updating Song");
     }//GEN-LAST:event_submitLyricsButtonActionPerformed
 
     private void plusLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_plusLabelMouseClicked
