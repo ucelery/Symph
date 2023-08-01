@@ -30,6 +30,8 @@ import java.awt.event.MouseAdapter;
 */
 
 import Controllers.Controller;
+import Utilities.MusicPlayer.MusicPlayerListener;
+import Utilities.PlayerManager;
 import Utilities.Playlist;
 import Utilities.Song;
 import java.awt.event.WindowEvent;
@@ -38,7 +40,7 @@ import java.net.MalformedURLException;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-public class MainView extends javax.swing.JFrame {
+public class MainView extends javax.swing.JFrame implements MusicPlayerListener {
     ArrayList<PlaylistTab> listPlaylists = new ArrayList<>();
     private CardLayout cardLayout;
     
@@ -73,6 +75,7 @@ public class MainView extends javax.swing.JFrame {
                     loadingView.incrementLoadingBar();
                     
                     controller.getPlayerManager().addListener(playingView1);
+                    controller.getPlayerManager().addListener(this);
                     loadingView.incrementLoadingBar();
                     initSongComponents();
                 } catch (IOException ex) {
@@ -92,6 +95,70 @@ public class MainView extends javax.swing.JFrame {
         
         initThread.start();
     }
+    
+        @Override
+    public void onSongEnd(Song song) {
+        
+    }
+
+    @Override
+    public void onSongPlay(Song song) {
+        try {
+            // Update Song Cover Image, Song Title, Song Artist, Lyrics (if any)
+            // Cover URL
+            try {
+                URL coverUrl = new URL(song.getImageURL());
+                Image coverImage = ImageIO.read(coverUrl);
+
+                int labelWidth = currentSongImage.getWidth();
+                Image scaledCover = coverImage.getScaledInstance(labelWidth, -1, Image.SCALE_SMOOTH);
+                ImageIcon coverIcon = new ImageIcon(scaledCover);
+                currentSongImage.setIcon(coverIcon);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            
+            // Song Title
+            songTitle.setText(song.getTitle());
+            
+            // Song Artist
+            artist1.setText(song.getArtist());
+            
+            // Slider Max
+            progressSlider.setMaximum(song.getDuration());
+        } catch (IOException ex) {
+            Logger.getLogger(PlayingView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public void onSongPause(Song song) {
+        
+    }
+
+    @Override
+    public void onSongResume(Song song) {
+        
+    }
+
+    @Override
+    public void onSongPlaying(int currentDur) {
+        int min = currentDur / 60;
+        int sec = currentDur - (min * 60);
+        
+        progressSlider.setValue(currentDur);
+    }
+
+    @Override
+    public void onQueueUpdate(java.util.Queue<Song> songs) {
+        
+    }
+
+    @Override
+    public void onQueueEnd() {
+        
+    }
+     
     
     private void initSongComponents() throws MalformedURLException, IOException {
         //plus icon beside both playlist and My song labels
@@ -189,10 +256,11 @@ public class MainView extends javax.swing.JFrame {
             for(Song song : songs) {
                 Songs newSongsRow = new Songs(String.valueOf(index + 1), song);
                 songsContainer.add(newSongsRow);
+                newSongsRow.addListener(controller);
                 index++;
             }
      }
-     
+
     public class LeaveButtonMouseListener extends MouseAdapter {
         public void mouseClicked(MouseEvent e) {
             // Action to be performed when Button 1 is clicked
@@ -359,14 +427,14 @@ public class MainView extends javax.swing.JFrame {
         songTitle.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
         songTitle.setForeground(new java.awt.Color(240, 240, 240));
         songTitle.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        songTitle.setText("Title");
+        songTitle.setText("                                                    ");
         songPlay1.add(songTitle);
-        songTitle.setBounds(80, 5, 130, 23);
+        songTitle.setBounds(80, 5, 310, 23);
 
         artist1.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
         artist1.setForeground(new java.awt.Color(240, 240, 240));
         artist1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        artist1.setText("Artist");
+        artist1.setText("                                                                              ");
         songPlay1.add(artist1);
         artist1.setBounds(80, 28, 300, 16);
 
@@ -374,7 +442,7 @@ public class MainView extends javax.swing.JFrame {
         progressSlider.setForeground(new java.awt.Color(226, 115, 150));
         progressSlider.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         songPlay1.add(progressSlider);
-        progressSlider.setBounds(660, 15, 310, 20);
+        progressSlider.setBounds(660, 15, 310, 16);
 
         previousBtn.setBackground(new java.awt.Color(26, 23, 32));
         previousBtn.setBorder(null);
@@ -390,6 +458,11 @@ public class MainView extends javax.swing.JFrame {
         playBtn.setBackground(new java.awt.Color(26, 23, 32));
         playBtn.setBorder(null);
         playBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        playBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                playBtnMousePressed(evt);
+            }
+        });
         playBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 playBtnActionPerformed(evt);
@@ -438,7 +511,7 @@ public class MainView extends javax.swing.JFrame {
             .addGroup(SubPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(SubPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 498, Short.MAX_VALUE)
+                .addComponent(SubPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 506, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(songPlay1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -636,11 +709,11 @@ public class MainView extends javax.swing.JFrame {
         addSongPanelLayout.setHorizontalGroup(
             addSongPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(addSongPanelLayout.createSequentialGroup()
-                .addContainerGap(691, Short.MAX_VALUE)
+                .addContainerGap(698, Short.MAX_VALUE)
                 .addComponent(cancelBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(40, 40, 40)
                 .addComponent(submitBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(199, Short.MAX_VALUE))
+                .addContainerGap(207, Short.MAX_VALUE))
             .addGroup(addSongPanelLayout.createSequentialGroup()
                 .addGap(200, 200, 200)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -649,13 +722,13 @@ public class MainView extends javax.swing.JFrame {
         addSongPanelLayout.setVerticalGroup(
             addSongPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(addSongPanelLayout.createSequentialGroup()
-                .addContainerGap(102, Short.MAX_VALUE)
+                .addContainerGap(106, Short.MAX_VALUE)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(addSongPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(submitBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(101, Short.MAX_VALUE))
+                .addContainerGap(105, Short.MAX_VALUE))
         );
 
         MainPanel.add(addSongPanel, "card4");
@@ -684,7 +757,7 @@ public class MainView extends javax.swing.JFrame {
     }//GEN-LAST:event_openPlayingViewbtnActionPerformed
 
     private void nextBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextBtnActionPerformed
-        // TODO add your handling code here:
+        controller.skipAudio();
     }//GEN-LAST:event_nextBtnActionPerformed
 
     private void previousBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousBtnActionPerformed
@@ -753,6 +826,14 @@ public class MainView extends javax.swing.JFrame {
     private void uploadImagebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadImagebtnActionPerformed
         songToUpload.setCoverFile();
     }//GEN-LAST:event_uploadImagebtnActionPerformed
+
+    private void playBtnMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playBtnMousePressed
+         if (controller.getMusicPlayerStatus() == PlayerManager.PlayerState.IDLE) {
+            controller.playAudio();
+        } else {
+            controller.toggleAudio();
+        }
+    }//GEN-LAST:event_playBtnMousePressed
 
     public static void main(String args[]) {
         try {

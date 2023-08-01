@@ -167,6 +167,7 @@ public class Database {
                 song.setImageURL(doc.getString("imageURL"));
                 song.setAudioURL(doc.getString("audioURL"));
                 song.setDuration(doc.getInteger("duration"));
+                song.setLyrics(doc.getString("lyrics"));
                 
                 resSongs.add(song);
             }
@@ -200,9 +201,6 @@ public class Database {
     public void updateSong(Song song) {
         new Thread(() -> {
             MongoCollection<Document> col = database.getCollection("songs");
-            
-            System.out.println(song.getID());
-            
             col.updateOne(Filters.eq("_id", song.getID()),
                     Updates.set("lyrics", song.getLyrics()));
         }).start();

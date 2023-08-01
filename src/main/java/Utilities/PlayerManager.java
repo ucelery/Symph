@@ -109,7 +109,6 @@ public class PlayerManager {
         if (musicQueue.isEmpty()) {
             queueAllSongs();
             shuffle();
-            queueNextSong();
         }
         
         play();
@@ -150,7 +149,7 @@ public class PlayerManager {
         
         // Put the previously playing song at the front if there is one playing
         if (state == PlayerState.PLAYING) {
-            stop();
+            player.stop();
             deque.offerFirst(currentSong);
         }
         
@@ -161,7 +160,7 @@ public class PlayerManager {
     }
     
     public void playNextSong() {
-        queueNextSong();
+        player.stop();
         play();
     }
     

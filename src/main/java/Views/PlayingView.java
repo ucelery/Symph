@@ -165,6 +165,11 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
         forwardButton.setForeground(new java.awt.Color(226, 115, 150));
         forwardButton.setText("»");
         forwardButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        forwardButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                forwardButtonMousePressed(evt);
+            }
+        });
 
         titleLabel.setFont(new java.awt.Font("Century Gothic", 1, 36)); // NOI18N
         titleLabel.setForeground(new java.awt.Color(240, 240, 240));
@@ -381,7 +386,7 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
                         .addGroup(queuePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel3)
                             .addComponent(jLabel2)
-                            .addComponent(songRow1, javax.swing.GroupLayout.DEFAULT_SIZE, 467, Short.MAX_VALUE)
+                            .addComponent(songRow1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(queueScroll, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addComponent(returnButton, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(31, Short.MAX_VALUE))
@@ -542,7 +547,7 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(lyricsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 576, Short.MAX_VALUE)
-            .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -650,6 +655,10 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
         addLyricsBtn.setText("Add Lyrics");
     }//GEN-LAST:event_addLyricsBtnMouseExited
 
+    private void forwardButtonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_forwardButtonMousePressed
+        controller.skipAudio();
+    }//GEN-LAST:event_forwardButtonMousePressed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel addLyricsBtn;
@@ -690,11 +699,17 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
 
     @Override
     public void onSongEnd(Song song) {
-        return;
+        String playSym = "►";
+        String pauseSym = "II";
+        playButton.setText(playSym);
     }
 
     @Override
     public void onSongPlay(Song song) {
+        // Update Icon
+        String playSym = "►";
+        String pauseSym = "II";
+        playButton.setText(pauseSym);
         try {
             // Update Song Cover Image, Song Title, Song Artist, Lyrics (if any)
             setCoverUrl(song.getImageURL());
@@ -719,7 +734,6 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
     public void onQueueUpdate(Queue<Song> songs) {
         queueContainer.removeAll();
         for (Song song : songs) {
-            System.out.println(song.getTitle());
             try {
                 SongRow row = new SongRow();
                 row.updateSongPanel(song);
@@ -735,5 +749,15 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
     @Override
     public void onQueueEnd() {
         playButton.setText("II");
+    }
+
+    @Override
+    public void onSongPause(Song song) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void onSongResume(Song song) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
