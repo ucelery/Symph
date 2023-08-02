@@ -85,6 +85,7 @@ public class Controller implements SongComponentListener {
                 
                 // Update the View
                 System.out.println("[ APP ] Song has been added");
+                playerManager.addSongInBank(song);
             }).exceptionally(ex -> {
                 System.out.println("Future Exception: " + ex);
                 return null;

@@ -54,6 +54,12 @@ public class PlayerManager {
         playerListeners.add(e);
     }
     
+    public void invokeSongBankAddEvent(ArrayList<Song> songs) {
+        for (MusicPlayerListener mpl : playerListeners) {
+            mpl.onSongBankAdd(songs);
+        }
+    }
+    
     public void invokeSongPlayEvent(Song song) {
         for (MusicPlayerListener mpl : playerListeners) {
             mpl.onSongPlay(song);
@@ -213,6 +219,10 @@ public class PlayerManager {
     
     public ArrayList<Song> getAllSongs() {
         return songBank;
+    }
+    
+    public void addSongInBank(Song song) {
+        invokeSongBankAddEvent(songBank);
     }
     
     public PlayerState getState() {
