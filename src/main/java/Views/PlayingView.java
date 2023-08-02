@@ -18,6 +18,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -753,11 +754,16 @@ public class PlayingView extends javax.swing.JPanel implements MusicPlayerListen
 
     @Override
     public void onSongPause(Song song) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return;
     }
 
     @Override
     public void onSongResume(Song song) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return;
+    }
+
+    @Override
+    public void onSongBankAdd(ArrayList<Song> songs) {
+        return;
     }
 }

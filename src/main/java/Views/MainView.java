@@ -261,6 +261,18 @@ public class MainView extends javax.swing.JFrame implements MusicPlayerListener 
             }
      }
 
+    @Override
+    public void onSongBankAdd(ArrayList<Song> songs) {
+        try {
+            for (Song song : songs) {
+                System.out.println(song);
+            }
+            createSongPanel(songs);
+        } catch (IOException ex) {
+            Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     public class LeaveButtonMouseListener extends MouseAdapter {
         public void mouseClicked(MouseEvent e) {
             // Action to be performed when Button 1 is clicked
