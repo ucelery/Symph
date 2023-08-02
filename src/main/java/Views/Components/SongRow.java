@@ -56,9 +56,13 @@ public class SongRow extends javax.swing.JPanel {
         currentDurationLabel1 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(26, 23, 32));
+        setAlignmentX(0.0F);
+        setAlignmentY(0.0F);
+        setMaximumSize(new java.awt.Dimension(460, 57));
+        setMinimumSize(new java.awt.Dimension(460, 57));
 
         jLabel5.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(240, 240, 240));
+        jLabel5.setForeground(new java.awt.Color(226, 115, 150));
         jLabel5.setText("ıIı");
 
         currentArtistLabel1.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N

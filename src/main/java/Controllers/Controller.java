@@ -116,6 +116,10 @@ public class Controller implements SongComponentListener {
         playerManager.resume();
     }
     
+    public void skipAudio() {
+        playerManager.playNextSong();
+    }
+    
     public ArrayList<Song> getSongs() {
         return playerManager.getAllSongs();
     }
@@ -148,6 +152,7 @@ public class Controller implements SongComponentListener {
 
     @Override
     public void onSongAddQueue(Song song) {
+        System.out.println("is this thing working");
         playerManager.enqueueSong(song);
     }
 }

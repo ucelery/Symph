@@ -14,6 +14,8 @@ import java.util.Queue;
 public interface MusicPlayerListener {
     void onSongEnd(Song song);
     void onSongPlay(Song song);
+    void onSongPause(Song song);
+    void onSongResume(Song song);
     void onSongPlaying(int secs);
     void onQueueUpdate(Queue<Song> songs);
     void onQueueEnd();
